@@ -1,0 +1,84 @@
+.tokenize > .tokens-container {
+    position: relative;
+    list-style: none;
+    padding: 0 0 5px 5px;
+    height: auto;
+    min-height: 34px;
+    cursor: text;
+}
+
+.tokenize > .tokens-container.input-sm {
+    padding: 0 0 4px 4px;
+    min-height: 30px;
+}
+
+.tokenize > .tokens-container.input-lg {
+    padding: 0 0 9px 9px;
+    min-height: 46px;
+}
+
+.tokenize > .tokens-container > .token {
+    padding: 0 1.2em 0 5px;
+    background-color: #eff2f7;
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+            border-radius: 2px;
+}
+
+.tokenize > .tokens-container > .token,
+.tokenize > .tokens-container > .token-search {
+    border: 1px solid #cdd5e3;
+    display: inline-block;
+    margin: 5px 5px 0 0;
+    position: relative;
+    vertical-align: middle;
+}
+
+.tokenize > .tokens-container > .token-search {
+    padding: 0;
+    border-color: #fff;
+}
+
+.tokenize > .tokens-container > .token-search > input {
+    padding: 0;
+    margin: 0;
+    line-height: 1em;
+    border: 1px solid #fff;
+    outline: none;
+    width: 5px;
+}
+
+.tokenize > .tokens-container.input-sm > .token-search,
+.tokenize > .tokens-container.input-sm > .token {
+    margin: 4px 4px 0 0;
+}
+
+.tokenize > .tokens-container.input-lg > .token-search,
+.tokenize > .tokens-container.input-lg > .token {
+    margin: 9px 9px 0 0;
+}
+
+.tokenize > .tokens-container > .token.current {
+    background-color: #5b72a4;
+    border-color: #425c96;
+    color: #fff
+}
+
+.tokenize > .tokens-container > .token > .dismiss {
+    position: absolute;
+    right: 5px;
+    color: #a9b9d8;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tokenize > .tokens-container > .token.current > .dismiss {
+    color: #5b72a4;
+}
+
+.tokenize > .tokens-container > .token > .dismiss {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
