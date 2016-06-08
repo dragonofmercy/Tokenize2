@@ -42,17 +42,34 @@
 
         this.element = $(element);
         this.options = $.extend({}, Tokenize2.DEFAULTS, options);
-        this.count = 0;
         this.bind();
         this.trigger('tokenize.load');
 
+    };
+
+    /**
+     * Keycodes constants
+     *
+     * @type {object}
+     */
+    var KEYS = {
+        BACKSPACE: 8,
+        TAB: 9,
+        ENTER: 13,
+        ESCAPE: 27,
+        ARROW_UP: 38,
+        ARROW_DOWN: 40
     };
 
     Tokenize2.VERSION = '1.0';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         maxElements: 0,
-        newElements: false
+        newElements: true,
+        searchMinLength: 0,
+        delimiter: ',',
+        dataSource: 'select',
+        debounce: 0
     };
 
     /**
@@ -75,8 +92,17 @@
         this.element.on('tokenize.remap', {}, $.proxy(function(){ this.remap() }, this));
         this.element.on('tokenize.focus', {}, $.proxy(function(){ this.focus() }, this));
         this.element.on('tokenize.blur', {}, $.proxy(function(){ this.blur() }, this));
-        this.element.on('tokenize.keypress', {}, $.proxy(function(e){ this.keypress(e) }, this));
-        this.element.on('tokenize.keydown', {}, $.proxy(function(e){ this.keydown(e) }, this));
+        this.element.on('tokenize.search', {}, $.proxy(function(e, v){ this.find(v) }, this));
+        this.element.on('tokenize.dropdown.up', {}, $.proxy(function(){ this.dropdownSelectionMove(-1) }, this));
+        this.element.on('tokenize.dropdown.down', {}, $.proxy(function(){ this.dropdownSelectionMove(1) }, this));
+        this.element.on('tokenize.dropdown.clear', {}, $.proxy(function(){ this.dropdownClear() }, this));
+        this.element.on('tokenize.dropdown.show', {}, $.proxy(function(){ this.dropdownShow() }, this));
+        this.element.on('tokenize.dropdown.hide', {}, $.proxy(function(){ this.dropdownHide() }, this));
+        this.element.on('tokenize.dropdown.fill', {}, $.proxy(function(e, i){ this.dropdownFill(i) }, this));
+        this.element.on('tokenize.dropdown.itemAdd', {}, $.proxy(function(e, k, v){ this.dropdownAddItem(k, v) }, this));
+        this.element.on('tokenize.keypress', {}, $.proxy(function(e, routedEvent){ this.keypress(routedEvent) }, this));
+        this.element.on('tokenize.keydown', {}, $.proxy(function(e, routedEvent){ this.keydown(routedEvent) }, this));
+        this.element.on('tokenize.keyup', {}, $.proxy(function(e, routedEvent){ this.keyup(routedEvent) }, this));
         this.element.on('tokenize.tokens.add', {}, $.proxy(function(e, v, t){ this.tokenAdd(v, t) }, this));
         this.element.on('tokenize.tokens.remove', {}, $.proxy(function(e, v){ this.tokenRemove(v) }, this));
 
@@ -89,17 +115,19 @@
 
         this.element.hide();
 
-        this.search = $('<li class="token-search" />');
+        this.dropdown = false;
+        this.searchContainer = $('<li class="token-search" />');
         this.input = $('<input autocomplete="off" />')
             .on('click', {}, $.proxy(function(){ this.trigger('tokenize.focus') }, this))
-            .on('keydown', {}, $.proxy(function(){ this.trigger('tokenize.keydown') }, this))
-            .on('keypress', {}, $.proxy(function(){ this.trigger('tokenize.keypress') }, this))
+            .on('keydown', {}, $.proxy(function(e){ this.trigger('tokenize.keydown', [e]) }, this))
+            .on('keypress', {}, $.proxy(function(e){ this.trigger('tokenize.keypress', [e]) }, this))
+            .on('keyup', {}, $.proxy(function(e){ this.trigger('tokenize.keyup', [e]) }, this))
             .on('paste', {}, $.proxy(function(){  }, this))
             .on('blur', {}, $.proxy(function(){ this.trigger('tokenize.blur') }, this));
 
         this.tokensContainer = $('<ul class="tokens-container form-control" />')
             .addClass(this.element.attr('class'))
-            .append(this.search.append(this.input))
+            .append(this.searchContainer.append(this.input))
             .on('click mousedown', {}, $.proxy(function(e){
                 if($(e.target)[0] == this.tokensContainer[0]){
                     this.trigger('tokenize.focus');
@@ -113,7 +141,6 @@
 
         this.trigger('tokenize.remap');
         this.trigger('tokenize.loaded');
-
     };
 
     /**
@@ -129,10 +156,23 @@
 
         value = this.escape(value);
         text = text || value;
+        this.resetInput();
 
-        if((value === undefined || value === '')
-            || (this.options.maxElements > 0 && this.count >= this.options.maxElements)
-            || $('li.token[data-value="' + value + '"]', this.tokensContainer).length > 0) {
+        // Check if token is empty
+        if(value === undefined || value === ''){
+            this.trigger('tokenize.tokens.error.empty');
+            return this;
+        }
+
+        // Check if max number of token is reached
+        if(this.options.maxElements > 0 && $('li.token', this.tokensContainer).length >= this.options.maxElements){
+            this.trigger('tokenize.tokens.error.max');
+            return this;
+        }
+
+        // Check duplicate token
+        if($('li.token[data-value="' + value + '"]', this.tokensContainer).length > 0){
+            this.trigger('tokenize.tokens.error.duplicate', [value, text]);
             return this;
         }
 
@@ -141,6 +181,7 @@
         } else if(this.options.newElements){
             this.element.append($('<option selected data-type="custom" />').val(value).html(text));
         } else {
+            this.trigger('tokenize.tokens.error.noNewElements');
             return this;
         }
 
@@ -151,8 +192,10 @@
                 e.preventDefault();
                 this.trigger('tokenize.tokens.remove', [value]);
             }, this)))
-            .insertBefore(this.search);
+            .insertBefore(this.searchContainer);
 
+        this.trigger('tokenize.tokens.added', [value, text]);
+        this.trigger('tokenize.dropdown.hide');
         return this;
 
     };
@@ -210,22 +253,369 @@
     /**
      * Keydown
      *
-     * @param {event} e
+     * @param {object} e
      */
     Tokenize2.prototype.keydown = function(e){
 
-        console.log(e);
+        if(e.type === 'keydown'){
+            this.scaleInput();
+            switch(e.keyCode){
+                case KEYS.BACKSPACE:
+                    if(this.input.val().length < 1){
+                        e.preventDefault();
+                        if($('li.token.pending-delete', this.tokensContainer).length > 0){
+                            this.trigger('tokenize.tokens.remove', [$('li.token.pending-delete', this.tokensContainer).first().attr('data-value')]);
+                        } else {
+                            var $token = $('li.token:last', this.tokensContainer);
+                            if($token.length > 0){
+                                this.trigger('tokenize.tokens.markForDelete', [$token.attr('data-value')]);
+                                $token.addClass('pending-delete');
+                            }
+                        }
+                        this.trigger('tokenize.dropdown.hide');
+                    }
+                    break;
+
+                case KEYS.TAB:
+                case KEYS.ENTER:
+                    this.resetPending();
+                    if(this.isDropdownOpen() && $('li.active', this.dropdown).length > 0){
+                        e.preventDefault();
+                        var $item = $('li.active a', this.dropdown);
+                        this.trigger('tokenize.tokens.add', [$item.attr('data-value'), $item.attr('data-text')]);
+                    } else {
+                        if(this.input.val().length > 0){
+                            e.preventDefault();
+                            this.trigger('tokenize.tokens.add', [this.input.val()]);
+                        }
+                    }
+                    break;
+
+                case KEYS.ESCAPE:
+                    this.scaleInput();
+                    this.resetPending();
+                    break;
+
+                case KEYS.ARROW_UP:
+                    e.preventDefault();
+                    this.trigger('tokenize.dropdown.up');
+                    break;
+
+                case KEYS.ARROW_DOWN:
+                    e.preventDefault();
+                    this.trigger('tokenize.dropdown.down');
+                    break;
+
+                default:
+                    this.resetPending();
+                    break;
+
+            }
+        } else {
+            e.preventDefault();
+        }
+
+    };
+
+    /**
+     * Keyup
+     *
+     * @param {object} e
+     */
+    Tokenize2.prototype.keyup = function(e){
+
+        if(e.type === 'keyup'){
+            this.scaleInput();
+            switch(e.keyCode){
+                case KEYS.TAB:
+                case KEYS.ENTER:
+                case KEYS.ESCAPE:
+                case KEYS.ARROW_UP:
+                case KEYS.ARROW_DOWN:
+                    break;
+                case KEYS.BACKSPACE:
+                default:
+                    if(this.input.val().length > 0){
+                        this.trigger('tokenize.search', [this.input.val()]);
+                    } else {
+                        this.trigger('tokenize.dropdown.hide');
+                    }
+                    break;
+            }
+        } else {
+            e.preventDefault();
+        }
 
     };
 
     /**
      * Keypress
      *
-     * @param {event} e
+     * @param {object} e
      */
     Tokenize2.prototype.keypress = function(e){
 
+        if(e.type === 'keypress'){
+            var $delimiter = false;
 
+            if(Array.isArray(this.options.delimiter)){
+                if(this.options.delimiter.indexOf(String.fromCharCode(e.which)) >= 0){
+                    $delimiter = true;
+                }
+            } else {
+                if(String.fromCharCode(e.which) == this.options.delimiter){
+                    $delimiter = true;
+                }
+            }
+
+            if($delimiter){
+                e.preventDefault();
+                this.trigger('tokenize.tokens.add', [this.input.val(), null]);
+            }
+        } else {
+            e.preventDefault();
+        }
+
+    };
+
+    /**
+     * Search value
+     *
+     * @param {string} v
+     */
+    Tokenize2.prototype.find = function(v){
+
+        if((this.options.maxElements > 0 && $('li.token', this.tokensContainer).length >= this.options.maxElements) ||
+            v.length < this.options.searchMinLength){
+            return false;
+        }
+
+        if(this.options.dataSource === 'select'){
+            this.dataSourceLocal(v);
+        } else if(typeof this.options.dataSource === 'function'){
+            this.options.dataSource(v);
+        } else {
+            this.dataSourceRemote(v);
+        }
+
+    };
+
+    /**
+     * Gets data from ajax
+     *
+     * @param {string} search
+     */
+    Tokenize2.prototype.dataSourceRemote = function(search){
+
+        this.debounce($.proxy(function(){
+            if(this.xhr !== undefined){
+                this.xhr.abort();
+            }
+            this.xhr = $.ajax(this.options.dataSource, {
+                data: { search: search },
+                dataType: 'json',
+                success: $.proxy(function(data){
+                    var $items = {};
+                    $.each(data, $.proxy(function(k, v){
+                        $items[v.value] = v.text;
+                    }, this));
+                    this.trigger('tokenize.dropdown.fill', [$items]);
+                }, this)
+            });
+        }, this), this.options.debounce);
+
+    };
+
+    /**
+     * Gets data from select
+     *
+     * @param {string} search
+     */
+    Tokenize2.prototype.dataSourceLocal = function(search){
+
+        var $items = {};
+        var $regexp = new RegExp(search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
+        $('option', this.element)
+            .not(':selected, :disabled')
+            .each(function(){
+                if($regexp.test($(this).html())){
+                    $items[$(this).attr('value')] = $(this).html();
+                }
+            });
+
+        this.trigger('tokenize.dropdown.fill', [$items]);
+
+    };
+
+    /**
+     * Debounce method for ajax request
+     *
+     * @param {function} func
+     * @param {number} threshold
+     */
+    Tokenize2.prototype.debounce = function(func, threshold){
+
+        var $args = arguments;
+        var $delayed = $.proxy(function(){
+            func.apply(this, $args);
+            this.debounceTimeout = undefined;
+        }, this);
+
+        if(this.debounceTimeout !== undefined){
+            clearTimeout(this.debounceTimeout);
+        }
+
+        console.log(threshold);
+
+        this.debounceTimeout = setTimeout($delayed, threshold || 0);
+
+    };
+
+    /**
+     * Show dropdown
+     */
+    Tokenize2.prototype.dropdownShow = function(){
+
+        if(!this.isDropdownOpen()){
+            this.dropdown = $('<div class="tokenize-dropdown dropdown"><ul class="dropdown-menu" /></div>');
+            $('body').append(this.dropdown.show());
+            $(window).on('resize scroll', {}, $.proxy(function(){ this.dropdownMove() }, this)).trigger('resize');
+            this.trigger('tokenize.dropdown.shown');
+        }
+
+    };
+
+    /**
+     * Hide dropdown
+     */
+    Tokenize2.prototype.dropdownHide = function(){
+
+        if(this.isDropdownOpen()){
+            $(window).off('resize');
+            this.dropdown.remove();
+            this.dropdown = false;
+            this.trigger('tokenize.dropdown.hidden');
+        }
+
+    };
+
+    /**
+     * Clear dropdown
+     */
+    Tokenize2.prototype.dropdownClear = function(){
+
+        this.dropdown.find('.dropdown-menu li').remove();
+        this.trigger('tokenize.dropdown.cleared');
+
+    };
+
+    /**
+     * Fill dropdown with options
+     *
+     * @param {object} items
+     */
+    Tokenize2.prototype.dropdownFill = function(items){
+
+        if(items && Object.keys(items).length > 0){
+            this.trigger('tokenize.dropdown.show');
+            this.trigger('tokenize.dropdown.clear');
+
+            $.each(items, $.proxy(function(k, v) {
+                this.trigger('tokenize.dropdown.itemAdd', [k, v]);
+            }, this));
+            if($('li.active', this.dropdown).length < 1){
+                $('li:first', this.dropdown).addClass('active');
+            }
+
+            this.trigger('tokenize.dropdown.filled');
+        } else {
+            this.trigger('tokenize.dropdown.hide');
+        }
+
+        // Fix the dropdown position when page start scroll
+        $(window).trigger('resize');
+
+    };
+
+    /**
+     * Move selection through dropdown items
+     * @param {int} d
+     */
+    Tokenize2.prototype.dropdownSelectionMove = function(d){
+
+        if($('li.active', this.dropdown).length > 0){
+            if(!$('li.active', this.dropdown).is('li:' + (d > 0 ? 'last-child'  : 'first-child'))){
+                var $active = $('li.active', this.dropdown);
+                $active.removeClass('active');
+                if(d > 0){
+                    $active.next().addClass('active');
+                } else {
+                    $active.prev().addClass('active');
+                }
+            } else {
+                $('li.active', this.dropdown).removeClass('active');
+                $('li:' + (d > 0 ? 'first-child' : 'last-child'), this.dropdown).addClass('active');
+            }
+        } else {
+            $('li:first', this.dropdown).addClass('active');
+        }
+
+    };
+
+    /**
+     * Add dropdown item
+     *
+     * @param {string} value
+     * @param {string} text
+     */
+    Tokenize2.prototype.dropdownAddItem = function(value, text){
+
+        if(this.isDropdownOpen()){
+            if($('li.token[data-value="' + value + '"]', this.tokensContainer).length < 1){
+                var $item = $('<li />').html($('<a />').html(text).attr({'data-value': value, 'data-text': text}))
+                    .on('mouseover', $.proxy(function(e){
+                        $('li', this.dropdown).removeClass('active');
+                        $(e.target).parent().addClass('active');
+                    }, this)).on('mouseout', $.proxy(function(){
+                        $('li', this.dropdown).removeClass('active');
+                    }, this)).on('click', $.proxy(function(e){
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        this.trigger('tokenize.tokens.add', [$(e.target).attr('data-value'), $(e.target).attr('data-text')]);
+                        this.trigger('tokenize.focus');
+                    }, this));
+                this.dropdown.find('.dropdown-menu').append($item);
+                this.trigger('tokenize.dropdown.itemAdded', [value, text]);
+            }
+        }
+
+    };
+
+    /**
+     * Move dropdown according tokens container
+     */
+    Tokenize2.prototype.dropdownMove = function(){
+
+        var $position = this.tokensContainer.offset();
+        var $height = this.tokensContainer.outerHeight();
+        var $width = this.tokensContainer.outerWidth();
+
+        this.dropdown.css({
+            top: $position.top + $height,
+            left: $position.left - $(window).scrollLeft(),
+            width: $width
+        })
+
+    };
+
+    /**
+     * Returns the current status of the dropdown
+     *
+     * @returns {boolean}
+     */
+    Tokenize2.prototype.isDropdownOpen = function(){
+
+        return (this.dropdown !== false);
 
     };
 
@@ -265,9 +655,58 @@
 
     };
 
+    /**
+     * Reset pending delete tokens
+     */
+    Tokenize2.prototype.resetPending = function(){
+
+        var $token = $('li.pending-delete:last', this.tokensContainer);
+
+        if($token.length > 0){
+            this.trigger('tokenize.tokens.cancelDelete', [$token.attr('data-value')]);
+            $token.removeClass('pending-delete');
+        }
+
+    };
+
+    /**
+     * Scale input
+     */
     Tokenize2.prototype.scaleInput = function(){
 
-        this.input.attr('size', Number(this.input.val().length) + 2);
+        var $canvas = document.createElement('canvas');
+        var $ctx = $canvas.getContext('2d');
+        var $width, $tokensContainerWidth;
+
+        $ctx.font = this.input.css('font-style') + ' ' +
+            this.input.css('font-variant') + ' ' +
+            this.input.css('font-weight') + ' ' +
+            Math.ceil(parseFloat(this.input.css('font-size'))) + 'px ' +
+            this.input.css('font-family');
+
+        $width = Math.round($ctx.measureText(this.input.val() + 'M').width) + Math.ceil(parseFloat(this.searchContainer.css('margin-left'))) + Math.ceil(parseFloat(this.searchContainer.css('margin-right')));
+        $tokensContainerWidth = this.tokensContainer.width() -
+            (
+                Math.ceil(parseFloat(this.tokensContainer.css('border-left-width'))) + Math.ceil(parseFloat(this.tokensContainer.css('border-right-width')) +
+                Math.ceil(parseFloat(this.tokensContainer.css('padding-left'))) + Math.ceil(parseFloat(this.tokensContainer.css('padding-right'))))
+            );
+
+        if($width >= $tokensContainerWidth){
+            $width = $tokensContainerWidth;
+        }
+
+        this.searchContainer.width($width);
+        $canvas.remove();
+
+    };
+
+    /**
+     * Reset input
+     */
+    Tokenize2.prototype.resetInput = function(){
+
+        this.input.val('');
+        this.scaleInput();
 
     };
 

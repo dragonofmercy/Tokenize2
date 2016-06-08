@@ -44,8 +44,10 @@
     margin: 0;
     line-height: 1em;
     border: 1px solid #fff;
+    border-left: none;
+    border-right: none;
     outline: none;
-    width: 5px;
+    width: 100%;
 }
 
 .tokenize > .tokens-container.input-sm > .token-search,
@@ -58,7 +60,7 @@
     margin: 9px 9px 0 0;
 }
 
-.tokenize > .tokens-container > .token.current {
+.tokenize > .tokens-container > .token.pending-delete {
     background-color: #5b72a4;
     border-color: #425c96;
     color: #fff
@@ -72,8 +74,8 @@
     cursor: pointer;
 }
 
-.tokenize > .tokens-container > .token.current > .dismiss {
-    color: #5b72a4;
+.tokenize > .tokens-container > .token.pending-delete > .dismiss {
+    color: #aaa;
 }
 
 .tokenize > .tokens-container > .token > .dismiss {
@@ -81,4 +83,25 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.tokenize-dropdown {
+    position: absolute;
+    display: none;
+}
+
+.tokenize-dropdown > .dropdown-menu {
+    min-height: 10px;
+    width: 100%;
+    display: block;
+    margin: -1px 0 0 0;
+}
+
+.tokenize-dropdown > .dropdown-menu li {
+    cursor: pointer;
+}
+
+.tokenize-dropdown > .dropdown-menu li:not(.active) a:hover,
+.tokenize-dropdown > .dropdown-menu li:not(.active) a:focus {
+    background-color: transparent;
 }
