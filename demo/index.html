@@ -66,6 +66,8 @@
                             <option value="Jenna">Jenna</option>
                             <option value="Anissa">Anissa</option>
                         </select>
+                        <hr />
+                        <button id="btnClear" class="btn btn-primary">Clear all</button>
                     </div>
                 </div>
                 <script>
@@ -74,6 +76,11 @@
                     });
                     $('.tokenize-demo2').tokenize2();
                     $('.tokenize-demo3').tokenize2();
+
+                    $('#btnClear').on('mousedown touchstart', function(e){
+                        e.preventDefault();
+                        $('.tokenize-demo1, .tokenize-demo2, .tokenize-demo3').trigger('tokenize:clear');
+                    })
                 </script>
             </div>
         </div>

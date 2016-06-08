@@ -6,6 +6,10 @@ body {
     background-color: #EFF1F2;
 }
 
+select {
+    display: none;
+}
+
 .navbar {
     background-color: #fff;
     -webkit-border-radius: 0 0 4px 4px;
