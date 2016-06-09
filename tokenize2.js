@@ -42,6 +42,10 @@
 
         this.element = $(element);
         this.options = $.extend({}, Tokenize2.DEFAULTS, options);
+
+        this.options.tabIndex = this.options.tabIndex === -1 ? 0 : this.options.tabIndex;
+        this.options.sortable = this.options.tokensMaxItems === 1 ? false : this.options.sortable;
+
         this.bind();
         this.trigger('tokenize:load');
 
@@ -66,15 +70,16 @@
     Tokenize2.VERSION = '1.0';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
-        tokensMaxItems: 4,
-        tokensAllowCustom: true,
+        tokensMaxItems: 0,
+        tokensAllowCustom: false,
         dropdownMaxItems: 10,
         searchMinLength: 0,
         delimiter: ',',
         dataSource: 'select',
         debounce: 0,
         placeholder: false,
-        sortable: false
+        sortable: false,
+        tabIndex: 0
     };
 
     /**
@@ -123,6 +128,10 @@
         this.id = this.guid();
         this.element.hide();
 
+        if(!this.element.attr('multiple')){
+            console.error('Attribute multiple is missing, tokenize2 can be buggy !')
+        }
+
         this.dropdown = undefined;
         this.searchContainer = $('<li class="token-search" />');
         this.input = $('<input autocomplete="off" />')
@@ -136,8 +145,9 @@
             }, this))
             .on('paste', {}, $.proxy(function(){  }, this));
 
-        this.tokensContainer = $('<ul class="tokens-container form-control" tabindex="0" />')
+        this.tokensContainer = $('<ul class="tokens-container form-control" />')
             .addClass(this.element.attr('class'))
+            .attr('tabindex', this.options.tabIndex)
             .append(this.searchContainer.append(this.input));
 
         if(this.options.placeholder !== false){
@@ -160,6 +170,10 @@
         .focusout($.proxy(function(){
             this.trigger('tokenize:deselect')
         }, this));
+
+        if(this.options.tokensMaxItems === 1){
+            this.container.addClass('single');
+        }
 
         if(this.options.sortable){
             if(typeof $.ui != 'undefined'){
@@ -185,14 +199,15 @@
             }
         }
 
-        this.element.on('tokenize:tokens:add tokenize:tokens:remove', $.proxy(function(){
-            if(this.options.tokensMaxItems > 0 && $('li.token', this.tokensContainer).length >= this.options.tokensMaxItems){
-                this.searchContainer.hide();
-            } else {
-                this.searchContainer.show();
-                this.input.focus();
-            }
-        }, this))
+        this.element
+            .on('tokenize:tokens:add tokenize:tokens:remove', $.proxy(function(){
+                if(this.options.tokensMaxItems > 0 && $('li.token', this.tokensContainer).length >= this.options.tokensMaxItems){
+                    this.searchContainer.hide();
+                } else {
+                    this.searchContainer.show();
+                    this.input.focus();
+                }
+            }, this))
             .on('tokenize:keydown tokenize:keyup tokenize:loaded', $.proxy(function(){
                 this.scaleInput();
             }, this));
@@ -256,7 +271,7 @@
         }
 
         if($('option[value="' + value + '"]', this.element).length) {
-            $('option[value="' + value + '"]', this.element).attr('selected', true).prop('selected', true);
+            $('option[value="' + value + '"]', this.element).attr('selected', 'selected').prop('selected', true);
         } else if(this.options.tokensAllowCustom){
             this.element.append($('<option selected data-type="custom" />').val(value).html(text));
         } else {
