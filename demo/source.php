@@ -6,7 +6,7 @@ $ret = array();
 
 foreach($obj as $item)
 {
-    if(stripos($item['text'], $_REQUEST['search']) !== false)
+    if((stripos($item['text'], $_REQUEST['search']) !== false) || $_REQUEST['search'] == '')
     {
         $ret[] = array('value' => $item['text'], 'text' => $item['text']);
     }

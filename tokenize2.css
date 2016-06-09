@@ -8,10 +8,10 @@
 }
 
 .tokenize.focus > .tokens-container {
-    border-color: #66afe9;
     outline: 0;
+    border-color: #66afe9;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
 
 .tokenize > .tokens-container.input-sm {
@@ -33,6 +33,7 @@
 }
 
 .tokenize > .tokens-container > .token,
+.tokenize > .tokens-container > .placeholder,
 .tokenize > .tokens-container > .token-search {
     border: 1px solid #cdd5e3;
     display: inline-block;
@@ -41,9 +42,25 @@
     vertical-align: middle;
 }
 
+.tokenize.sortable > .tokens-container > .token {
+    cursor: move;
+}
+
+.tokenize.sortable > .tokens-container > .token.shadow {
+    border-color: #ccc;
+    background-color: #ccc;
+    filter: alpha(opacity=50);
+    opacity: .2;
+}
+
+.tokenize > .tokens-container > .placeholder,
 .tokenize > .tokens-container > .token-search {
     padding: 0;
     border-color: #fff;
+}
+
+.tokenize > .tokens-container > .placeholder {
+    color: #ccc;
 }
 
 .tokenize > .tokens-container > .token-search > input {
@@ -57,11 +74,13 @@
     width: 100%;
 }
 
+.tokenize > .tokens-container.input-sm > .placeholder,
 .tokenize > .tokens-container.input-sm > .token-search,
 .tokenize > .tokens-container.input-sm > .token {
     margin: 4px 4px 0 0;
 }
 
+.tokenize > .tokens-container.input-lg > .placeholder,
 .tokenize > .tokens-container.input-lg > .token-search,
 .tokenize > .tokens-container.input-lg > .token {
     margin: 9px 9px 0 0;

@@ -35,18 +35,9 @@
                     </div>
                     <div class="panel-body">
                         <select class="tokenize-demo1" multiple>
-                            <option value="Peta">Peta</option>
-                            <option value="Adrienne">Adrienne</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Lexi">Lexi</option>
-                            <option value="Bobbi">Bobbi</option>
-                            <option value="Lorissa">Lorissa</option>
-                            <option value="Jenna">Jenna</option>
-                            <option value="Anissa">Anissa</option>
                         </select>
                         <p>Bootstrap .input-sm</p>
                         <select class="tokenize-demo2 input-sm" multiple>
-                            <option value="Peta">Peta</option>
                             <option value="Adrienne">Adrienne</option>
                             <option value="Georgia">Georgia</option>
                             <option value="Lexi">Lexi</option>
@@ -57,10 +48,9 @@
                         </select>
                         <p>Bootstrap .input-lg</p>
                         <select class="tokenize-demo3 input-lg" multiple>
-                            <option value="Peta">Peta</option>
-                            <option value="Adrienne">Adrienne</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Lexi">Lexi</option>
+                            <option selected value="Adrienne">Adrienne</option>
+                            <option selected value="Georgia">Georgia</option>
+                            <option selected value="Lexi">Lexi</option>
                             <option value="Bobbi">Bobbi</option>
                             <option value="Lorissa">Lorissa</option>
                             <option value="Jenna">Jenna</option>
@@ -72,7 +62,9 @@
                 </div>
                 <script>
                     $('.tokenize-demo1').tokenize2({
-                        dataSource: 'source.php'
+                        dataSource: 'source.php',
+                        sortable: true,
+                        placeholder: 'Search to add new tokens'
                     });
                     $('.tokenize-demo2').tokenize2();
                     $('.tokenize-demo3').tokenize2();
@@ -80,7 +72,7 @@
                     $('#btnClear').on('mousedown touchstart', function(e){
                         e.preventDefault();
                         $('.tokenize-demo1, .tokenize-demo2, .tokenize-demo3').trigger('tokenize:clear');
-                    })
+                    });
                 </script>
             </div>
         </div>
