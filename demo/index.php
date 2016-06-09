@@ -102,7 +102,7 @@ function select_options($selected = array()){
                             <?php echo select_options() ?>
                         </select>
                         <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-limit-demo1').tokenize2({
+                        <pre class="prettyprint no-mar">$('.tokenize-limit-demo2').tokenize2({
     tokensMaxItems: 1
 });</pre>
                     </div>
