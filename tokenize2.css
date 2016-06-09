@@ -46,6 +46,12 @@
     cursor: move;
 }
 
+.tokenize.single > .tokens-container > .token {
+    display: block;
+    border-color: #fff;
+    background-color: transparent;
+}
+
 .tokenize.sortable > .tokens-container > .token.shadow {
     border-color: #ccc;
     background-color: #ccc;
