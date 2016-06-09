@@ -205,7 +205,6 @@
                     this.searchContainer.hide();
                 } else {
                     this.searchContainer.show();
-                    this.input.focus();
                 }
             }, this))
             .on('tokenize:keydown tokenize:keyup tokenize:loaded', $.proxy(function(){
