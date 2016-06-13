@@ -74,6 +74,8 @@
         tokensAllowCustom: false,
         dropdownMaxItems: 10,
         searchMinLength: 0,
+        searchFromStart: true,
+        searchHighlight: true,
         delimiter: ',',
         dataSource: 'select',
         debounce: 0,
@@ -115,7 +117,7 @@
             .on('tokenize:keydown', {}, $.proxy(function(e, routedEvent){ this.keydown(routedEvent) }, this))
             .on('tokenize:keyup', {}, $.proxy(function(e, routedEvent){ this.keyup(routedEvent) }, this))
             .on('tokenize:tokens:reorder', {}, $.proxy(function(){ this.reorder() }, this))
-            .on('tokenize:tokens:add', {}, $.proxy(function(e, v, t){ this.tokenAdd(v, t) }, this))
+            .on('tokenize:tokens:add', {}, $.proxy(function(e, v, t, c){ this.tokenAdd(v, t, c) }, this))
             .on('tokenize:tokens:remove', {}, $.proxy(function(e, v){ this.tokenRemove(v) }, this));
 
     };
@@ -146,7 +148,7 @@
             .on('paste', {}, $.proxy(function(){  }, this));
 
         this.tokensContainer = $('<ul class="tokens-container form-control" />')
-            .addClass(this.element.attr('class'))
+            .addClass(this.element.attr('data-class'))
             .attr('tabindex', this.options.tabIndex)
             .append(this.searchContainer.append(this.input));
 
@@ -243,12 +245,14 @@
      *
      * @param {string} value
      * @param {string} text
+     * @param {boolean} force
      * @returns {Tokenize2}
      */
-    Tokenize2.prototype.tokenAdd = function(value, text){
+    Tokenize2.prototype.tokenAdd = function(value, text, force){
 
         value = this.escape(value);
         text = text || value;
+        force = force || false;
         this.resetInput();
 
         // Check if token is empty
@@ -271,6 +275,8 @@
 
         if($('option[value="' + value + '"]', this.element).length) {
             $('option[value="' + value + '"]', this.element).attr('selected', 'selected').prop('selected', true);
+        } else if(force){
+            this.element.append($('<option selected />').val(value).html(text));
         } else if(this.options.tokensAllowCustom){
             this.element.append($('<option selected data-type="custom" />').val(value).html(text));
         } else {
@@ -325,7 +331,7 @@
 
         var $selected = $('option:selected', this.element);
         $selected.each($.proxy(function(v, t) {
-            this.trigger('tokenize:tokens:add', [$(t).val(), $(t).html()]);
+            this.trigger('tokenize:tokens:add', [$(t).val(), $(t).html(), false]);
         }, this));
 
         return this;
@@ -356,6 +362,7 @@
             this.trigger('tokenize:dropdown:hide');
         }
         this.container.removeClass('focus');
+        this.resetPending();
 
     };
 
@@ -386,17 +393,7 @@
 
                 case KEYS.TAB:
                 case KEYS.ENTER:
-                    this.resetPending();
-                    if(this.isDropdownOpen() && $('li.active', this.dropdown).length > 0){
-                        e.preventDefault();
-                        var $item = $('li.active a', this.dropdown);
-                        this.trigger('tokenize:tokens:add', [$item.attr('data-value'), $item.attr('data-text')]);
-                    } else {
-                        if(this.input.val().length > 0){
-                            e.preventDefault();
-                            this.trigger('tokenize:tokens:add', [this.input.val()]);
-                        }
-                    }
+                    this.pressedDelimiter(e);
                     break;
 
                 case KEYS.ESCAPE:
@@ -411,6 +408,10 @@
                 case KEYS.ARROW_DOWN:
                     e.preventDefault();
                     this.trigger('tokenize:dropdown:down');
+                    break;
+
+                case KEYS.CTRL:
+                    this.control = true;
                     break;
 
                 default:
@@ -438,8 +439,10 @@
                 case KEYS.ESCAPE:
                 case KEYS.ARROW_UP:
                 case KEYS.ARROW_DOWN:
-                case KEYS.CTRL:
                 case KEYS.MAJ:
+                    break;
+                case KEYS.CTRL:
+                    this.control = false;
                     break;
                 case KEYS.BACKSPACE:
                 default:
@@ -477,13 +480,25 @@
             }
 
             if($delimiter){
-                e.preventDefault();
-                this.trigger('tokenize:tokens:add', [this.input.val(), null]);
+                this.pressedDelimiter(e);
             }
         } else {
             e.preventDefault();
         }
 
+    };
+
+    Tokenize2.prototype.pressedDelimiter = function(e){
+        this.resetPending();
+        if(this.isDropdownOpen() && $('li.active', this.dropdown).length > 0 && this.control === false){
+            e.preventDefault();
+            $('li.active a', this.dropdown).trigger('mousedown');
+        } else {
+            if(this.input.val().length > 0){
+                e.preventDefault();
+                this.trigger('tokenize:tokens:add', [this.input.val()]);
+            }
+        }
     };
 
     /**
@@ -497,6 +512,8 @@
             this.trigger('tokenize:dropdown:hide');
             return false;
         }
+
+        this.lastSearchTerms = v;
 
         if(this.options.dataSource === 'select'){
             this.dataSourceLocal(v);
@@ -542,7 +559,9 @@
     Tokenize2.prototype.dataSourceLocal = function(search){
 
         var $items = [];
-        var $regexp = new RegExp(search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
+        var $searchString = (this.options.searchFromStart ? '^' : '') + this.escapeRegex(search);
+        var $regexp = new RegExp($searchString, 'i');
+
         $('option', this.element)
             .not(':selected, :disabled')
             .each(function(){
@@ -692,7 +711,7 @@
                     $('li', this.dropdown).removeClass('active');
                 }, this)).on('mousedown touchstart', $.proxy(function(e){
                     e.preventDefault();
-                    this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text')]);
+                    this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text'), true]);
                 }, this));
             if($('li.token[data-value="' + $li.find('a').attr('data-value') + '"]', this.tokensContainer).length < 1){
                 this.dropdown.find('.dropdown-menu').append($li);
@@ -710,7 +729,10 @@
      */
     Tokenize2.prototype.dropdownItemFormat = function(item){
 
-        return $('<a />').html(item.text).attr({
+        var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.lastSearchTerms) + ')', 'gi');
+        var $display = item.text.replace($regex, '<span class="highlight">$1</span>');
+
+        return $('<a />').html($display).attr({
             'data-value': item.value,
             'data-text': item.text
         });
@@ -831,6 +853,18 @@
         return String(string).replace(/["]/g, function(){
             return '\"';
         });
+
+    };
+
+    /**
+     * Escape regex
+     *
+     * @param {string} value
+     * @returns {string}
+     */
+    Tokenize2.prototype.escapeRegex = function(value){
+
+        return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
 
     };
 
