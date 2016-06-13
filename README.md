@@ -12,3 +12,7 @@ messages on facebook or tags on tumblr.
  * Sortable items
  * jQuery 2+
  * Bootstrap 3+
+ 
+# Documentation
+
+The documentation for Tokenize2 is available [through GitHub Wiki](https://github.com/zellerda/Tokenize2/wiki).
