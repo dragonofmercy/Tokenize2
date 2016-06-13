@@ -110,13 +110,6 @@
     color: #aaa;
 }
 
-.tokenize > .tokens-container > .token > .dismiss {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
 .tokenize-dropdown {
     position: absolute;
     display: none;
@@ -131,6 +124,10 @@
 
 .tokenize-dropdown > .dropdown-menu li {
     cursor: pointer;
+}
+
+.tokenize-dropdown > .dropdown-menu li > a .highlight {
+    font-weight: bold;
 }
 
 .tokenize-dropdown > .dropdown-menu li:not(.active) a:hover,
