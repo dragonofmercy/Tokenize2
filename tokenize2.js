@@ -40,6 +40,7 @@
      */
     var Tokenize2 = function(element, options){
 
+        this.control = false;
         this.element = $(element);
         this.options = $.extend({}, Tokenize2.DEFAULTS, options);
 
