@@ -107,6 +107,7 @@
             .on('tokenize:select', {}, $.proxy(function(e, c){ this.focus(c) }, this))
             .on('tokenize:deselect', {}, $.proxy(function(){ this.blur() }, this))
             .on('tokenize:search', {}, $.proxy(function(e, v){ this.find(v) }, this))
+            .on('tokenize:paste', {}, $.proxy(function(){ this.paste() }, this))
             .on('tokenize:dropdown:up', {}, $.proxy(function(){ this.dropdownSelectionMove(-1) }, this))
             .on('tokenize:dropdown:down', {}, $.proxy(function(){ this.dropdownSelectionMove(1) }, this))
             .on('tokenize:dropdown:clear', {}, $.proxy(function(){ this.dropdownClear() }, this))
@@ -146,7 +147,13 @@
                     this.trigger('tokenize:search', [this.input.val()]);
                 }
             }, this))
-            .on('paste', {}, $.proxy(function(){  }, this));
+            .on('paste', {}, $.proxy(function(){
+                if(this.options.tokensAllowCustom){
+                    setTimeout($.proxy(function(){
+                        this.trigger('tokenize:paste');
+                    }, this), 10);
+                }
+            }, this));
 
         this.tokensContainer = $('<ul class="tokens-container form-control" />')
             .addClass(this.element.attr('data-class'))
@@ -235,6 +242,21 @@
                 }
                 previous = current;
             }, this));
+        }
+
+    };
+
+    /**
+     * Transform clipboard item to tokens
+     */
+    Tokenize2.prototype.paste = function(){
+
+        var $pattern = new RegExp(this.escapeRegex(Array.isArray(this.options.delimiter) ? this.options.delimiter.join('|') : this.options.delimiter), 'ig');
+
+        if($pattern.test(this.input.val())){
+            $.each(this.input.val().split($pattern), $.proxy(function(_, value){
+                this.trigger('tokenize:tokens:add', [value, null, true]);
+            }, this))
         }
 
     };
@@ -491,12 +513,11 @@
 
     Tokenize2.prototype.pressedDelimiter = function(e){
         this.resetPending();
+        e.preventDefault();
         if(this.isDropdownOpen() && $('li.active', this.dropdown).length > 0 && this.control === false){
-            e.preventDefault();
             $('li.active a', this.dropdown).trigger('mousedown');
         } else {
             if(this.input.val().length > 0){
-                e.preventDefault();
                 this.trigger('tokenize:tokens:add', [this.input.val()]);
             }
         }
