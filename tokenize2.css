@@ -126,7 +126,7 @@
     cursor: pointer;
 }
 
-.tokenize-dropdown > .dropdown-menu li > a .highlight {
+.tokenize-dropdown > .dropdown-menu li > a .tokenize-highlight {
     font-weight: bold;
 }
 
