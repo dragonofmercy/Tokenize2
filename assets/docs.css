@@ -1629,3 +1629,59 @@ h1[id] {
         content: "" !important;
     }
 }
+
+/* Pretty printing styles. Used with prettify.js. */
+
+/* SPAN elements with the classes below are added by prettyprint. */
+.pln { color: #657b83 }  /* plain text */
+
+@media screen {
+    .str { color: #2aa198 }  /* string content */
+    .kwd { color: #859900 }  /* a keyword */
+    .com { color: #93a1a1; font-style: italic; }  /* a comment */
+    .typ { color: #899900 }  /* a type name */
+    .lit { color: #066 }  /* a literal value */
+    /* punctuation, lisp open bracket, lisp close bracket */
+    .pun, .opn, .clo { color: #474747 }
+    .tag { color: #1374b7; }  /* a markup tag name */
+    .atn { color: #b58900 }  /* a markup attribute name */
+    .atv { color: #268bd2 }  /* a markup attribute value */
+    .dec, .var { color: #2aa198 }  /* a declaration; a variable name */
+    .fun { color: #268bd2 }  /* a function name */
+}
+
+/* Use higher contrast and text-weight for printable form. */
+@media print, projection {
+    .str { color: #060 }
+    .kwd { color: #006; font-weight: bold }
+    .com { color: #600; font-style: italic }
+    .typ { color: #404; font-weight: bold }
+    .lit { color: #044 }
+    .pun, .opn, .clo { color: #440 }
+    .tag { color: #006; font-weight: bold }
+    .atn { color: #404 }
+    .atv { color: #060 }
+}
+
+/* Put a border around prettyprinted code snippets.
+pre.prettyprint { border-color: #fdf6e3; }
+pre.prettyprint code { background-color: #fdf6e3;  }  */
+pre.prettyprint { border-color: #ddd;}
+pre.prettyprint code { background-color: #f7f7f7;  }
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L5,
+li.L6,
+li.L7,
+li.L8 { list-style-type: none }
+/* Alternate shading for lines */
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 { background: #eee }
