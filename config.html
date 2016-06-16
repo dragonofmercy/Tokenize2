@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <title>Tokenize2 demo</title>
+    <title>Tokenize2 - Configuration</title>
 
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
 
@@ -16,6 +17,7 @@
     <link href="assets/tokenize2.min.css" rel="stylesheet" />
     <script src="assets/tokenize2.min.js"></script>
     <link href="assets/docs.css" rel="stylesheet" />
+    <script src="assets/application.js"></script>
 
 </head>
 <body onload="prettyPrint()">
@@ -45,19 +47,266 @@
     <div class="bs-docs-header" id="content" tabindex="-1">
         <div class="container">
             <h1>Configuration</h1>
-            <p>Configure Tokenize2 with it's amazing options and events.</p>
+            <p>Configure Tokenize2 with it's amazing options.</p>
         </div>
     </div>
 
     <div class="container bs-docs-container">
 
-        <div class="bs-docs-section">
+        <div class="row">
+            <div class="col-md-9" role="main">
 
-            <h1 class="page-header">
-                Page in construction
-            </h1>
-            <p>This page is not available for the moment, be patient...</p>
+                <div class="bs-docs-section">
 
+                    <h1 class="page-header" id="overview">Overview</h1>
+                    <p class="lead">Tokenize2 has a lot of amazing options and events, in order to simplify the comprehension of these, we will present all options and then it will be detailed with example and demos.</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped js-options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option name</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dataSource</td>
+                                    <td><code>select</code></td>
+                                    <td>Define where Tokenize2 will get values. You can use <code>select</code>, an URL for remote data or a callable.</td>
+                                </tr>
+                                <tr>
+                                    <td>debounce</td>
+                                    <td><code>0</code></td>
+                                    <td>Define the waiting time in milliseconds between remote searches. Available only if dataSource is an URL.</td>
+                                </tr>
+                                <tr>
+                                    <td>delimiter</td>
+                                    <td><code>,</code></td>
+                                    <td>Define the tokens delimiter, you can use a string or an array of string if you want use multiple delimiters.</td>
+                                </tr>
+                                <tr>
+                                    <td>sortable</td>
+                                    <td><code>false</code></td>
+                                    <td>
+                                        <b class="text-danger">This option require jQuery UI.</b><br />
+                                        Define if tokens are sortable.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>placeholder</td>
+                                    <td><code>false</code></td>
+                                    <td>Define the form control placeholder, if it's <code>false</code> no placeholder will be displayed.</td>
+                                </tr>
+                                <tr>
+                                    <td>tokensMaxItems</td>
+                                    <td><code>0</code></td>
+                                    <td>Define the maximum number of tokens allowed in the control, unlimited if it's <code>0</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td>tokensAllowCustom</td>
+                                    <td><code>false</code></td>
+                                    <td>Define if custom tokens are allowed.</td>
+                                </tr>
+                                <tr>
+                                    <td>dropdownMaxItems</td>
+                                    <td><code>10</code></td>
+                                    <td>Define the maximum number of items displayed in the search dropdown.</td>
+                                </tr>
+                                <tr>
+                                    <td>searchMinLength</td>
+                                    <td><code>0</code></td>
+                                    <td>Define the minimum number of characters required to start searching.</td>
+                                </tr>
+                                <tr>
+                                    <td>searchFromStart</td>
+                                    <td><code>true</code></td>
+                                    <td>Define if search will find result from the begining of string. This option is only available for <code>select</code> value in <code>dataSource</code> option.</td>
+                                </tr>
+                                <tr>
+                                    <td>searchHighlight</td>
+                                    <td><code>true</code></td>
+                                    <td>Define if search will be highlighted in result items.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>To define options for Tokenize2 just do like the example below.</p>
+                        <figure class="highlight"><pre class="prettyprint lang-js"><code>$('.tokenize-demo').tokenize2({
+    placeholder: "Type something to start..."
+});</code></pre></figure>
+                    </div>
+
+                </div>
+
+                <div class="bs-docs-section">
+
+                    <h1 class="page-header" id="options">
+                        Options demonstration
+                    </h1>
+
+                    <h2 id="options-data-source">dataSource</h2>
+                    <p>3 types of value are allowed for this option, <code>select</code> for local datas, an URL for remote datas and a <code>callable</code> if you want to make your own function. The default value is <code>select</code>.</p>
+
+                    <h3>Usage with local datas</h3>
+                    <p>For this usage you have to create an fill a <code>&lt;select&gt;</code> form control with all values as <code>&lt;option&gt;</code> tag.</p>
+                    <figure class="highlight"><pre class="prettyprint"><code>&lt;select class="tokenize-source-demo-1" multiple&gt;
+    &lt;option value="Africa"&gt;Africa&lt;/option&gt;
+    &lt;option value="Americas"&gt;Americas&lt;/option&gt;
+    &lt;option value="Asia"&gt;Asia&lt;/option&gt;
+    &lt;option value="Europe"&gt;Europe&lt;/option&gt;
+    &lt;option value="Oceania"&gt;Oceania&lt;/option&gt;
+&lt;/select&gt;</code></pre></figure>
+                    <p>Just add <code>'select'</code> value for the <code>dataSource</code> option.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-source-demo-1" multiple>
+                            <option value="Africa">Africa</option>
+                            <option value="Americas">Americas</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Oceania">Oceania</option>
+                        </select>
+                        <script>$('.tokenize-source-demo-1').tokenize2({dataSource: 'select'})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-source-demo-1').tokenize2({
+    dataSource: 'select'
+});</code></pre></figure>
+
+                    <h3>Usage with remote datas</h3>
+                    <p>To use this type of data source, you have two things to do. First configure Tokenize2 to get datas from a remote URL and then create the remote script to find datas according search.</p>
+                    <p>In the example below, I have a <a href="https://raw.githubusercontent.com/zellerda/Tokenize2/master/demo/names.json" target="_blank">JSON file containing a list of all countries</a> and a <a href="https://raw.githubusercontent.com/zellerda/Tokenize2/master/demo/remote.php" target="_blank">PHP script file</a> who will find in the JSON file the result according searching value.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-source-demo-2" multiple></select>
+                        <script>$('.tokenize-source-demo-2').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php'})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-source-demo-2').tokenize2({
+    dataSource: 'remote.php'
+});</code></pre></figure>
+                    <p>Search value is passed with <code>search</code> post value in the request.</p>
+                    <h3>Usage with callable datas <small class="text-danger"><b>(Experimental)</b></small></h3>
+                    <p>Callable option allow you to create your own search function. In the example below we will create a custom function to call Ajax and replace <code>search</code> request data with <code>term</code>.</p>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-source-demo-3').tokenize2({
+    dataSource: function(search){
+        $.ajax('remote.php', {
+            data: { term: search },
+            dataType: 'json',
+            success: $.proxy(function(data){
+                var $items = [];
+                $.each(data, $.proxy(function(k, v){
+                    $items.push(v);
+                }, this));
+                this.trigger('tokenize:dropdown:fill', [$items]);
+            }, this)
+        });
+    }
+});</code></pre></figure>
+                    <p>Note in the example above that you need to trigger the <code>tokenize:dropdown:fill</code> event to display the result in the dropdown.</p>
+
+                    <h2 id="options-debounce">debounce</h2>
+                    <p>
+                        The debounce option allow you to set a waiting time between each search. <br />
+                        <b class="text-danger">This option in only available in you use <code>dataSource</code> with an URL.</b>
+                    </p>
+                    <p>By default, there is not waiting time, requests are executed each time a letter is typed in the Tokenize2 field.</p>
+                    <p>In the example below we have set <code>debounce</code> to <code>1000</code> (1 second).</p>
+                    <div class="bs-example">
+                        <select class="tokenize-debounce-demo" multiple></select>
+                        <script>$('.tokenize-debounce-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php', debounce: 1000})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-debounce-demo').tokenize2({
+    dataSource: 'remote.php',
+    debounce: 1000
+});</code></pre></figure>
+
+                    <h2 id="options-delimiter">delimiter</h2>
+                    <p>Delimiter option allow you to define which character will validate a token. You can define a single character or an array of chars. The default value is the comma <code>,</code>.</p>
+                    <p>Note that the <code>tab</code> and <code>return</code> key validate the token too.</p>
+                    <p>
+                        In the example below we will set both <code>,</code> and <code>-</code> for delimiter.<br />
+                        For the purposes of demonstration we set <code>tokensAllowCustom</code> to <code>true</code>.
+                    </p>
+                    <p>Type something in the box below an validate it with one of the delimiters.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-delimiter-demo" multiple></select>
+                        <script>$('.tokenize-delimiter-demo').tokenize2({delimiter: [',', '-'], tokensAllowCustom: true})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-delimiter-demo').tokenize2({
+    delimiter: [',', '-']
+});</code></pre></figure>
+
+                    <h2 id="options-sortable">sortable</h2>
+                    <p>This option allow to use <a href="https://jqueryui.com/sortable" target="_blank">the sortable api of the jQuery UI library</a> for the tokens.</p>
+                    <div class="bs-callout bs-callout-warning">
+                        <h4>jQuery UI is required</h4>
+                        <p>Please don't forget to include jQuery UI javascript file to your page, jQuery UI CSS file in not required.</p>
+                        <figure class="highlight no-mar"><pre class="prettyprint"><code>&lt;script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"&gt;&lt;/script&gt;</code></pre></figure>
+                    </div>
+                    <div class="bs-example">
+                        <select class="tokenize-sortable-demo" multiple>
+                            <option selected value="Africa">Africa</option>
+                            <option selected value="Americas">Americas</option>
+                            <option selected value="Asia">Asia</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Oceania">Oceania</option>
+                        </select>
+                        <script>$('.tokenize-sortable-demo').tokenize2({sortable: true})</script>
+                        <p>Results using <code>$('.tokenize-sortable-demo').data('tokenize2').toArray().join(', ')</code>:</p>
+                        <pre class="console"><code id="tokenize-sortable-demo-console"></code></pre>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-sortable-demo').tokenize2({
+    sortable: true
+});</code></pre></figure>
+
+                    <h2 id="options-placeholder">placeholder</h2>
+                    <p>This placeholder option add a placeholder to the Tokenize2 control. By default there is no placeholder.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-placeholder-demo" multiple></select>
+                        <script>$('.tokenize-placeholder-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php', placeholder: 'Type something to start...'})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-delimiter-demo').tokenize2({
+    placeholder: 'Type something to start...'
+});</code></pre></figure>
+                    <p>The placeholder style can be customized using <code>.tokenize > .tokens-container > .placeholder</code> CSS class.</p>
+
+                    <h2 id="options-tokens-max-items">tokensMaxItems</h2>
+
+                    <h2 id="options-tokens-allow-custom">tokensAllowCustom</h2>
+
+                    <h2 id="options-dropdown-max-items">dropdownMaxItems</h2>
+
+                    <h2 id="options-search-min-length">searchMinLength</h2>
+
+                    <h2 id="options-search-from-start">searchFromStart</h2>
+
+                    <h2 id="options-search-highlight">searchHighlight</h2>
+
+                </div>
+
+            </div>
+            <div class="col-md-3" role="complementary">
+                <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
+                    <ul class="nav bs-docs-sidenav">
+                        <li><a href="#overview">Overview</a></li>
+                        <li>
+                            <a href="#options">Options demonstration</a>
+                            <ul class="nav">
+                                <li><a href="#options-data-source">dataSource</a></li>
+                                <li><a href="#options-debounce">debounce</a></li>
+                                <li><a href="#options-delimiter">delimiter</a></li>
+                                <li><a href="#options-sortable">sortable</a></li>
+                                <li><a href="#options-placeholder">placeholder</a></li>
+                                <li><a href="#options-tokens-max-items">tokensMaxItems</a></li>
+                                <li><a href="#options-tokens-allow-custom">tokensAllowCustom</a></li>
+                                <li><a href="#options-dropdown-max-items">dropdownMaxItems</a></li>
+                                <li><a href="#options-search-min-length">searchMinLength</a></li>
+                                <li><a href="#options-search-from-start">searchFromStart</a></li>
+                                <li><a href="#options-search-highlight">searchHighlight</a></li>
+                            </ul>
+
+                        </li>
+                    </ul>
+                    <a class="back-to-top" href="#top"> Back to top </a>
+                </nav>
+            </div>
         </div>
 
     </div>

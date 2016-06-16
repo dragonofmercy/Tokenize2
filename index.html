@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <title>Tokenize2 demo</title>
+    <title>Tokenize2</title>
 
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
 
@@ -57,9 +58,7 @@
 
                 <div class="bs-docs-section">
 
-                    <h1 class="page-header" id="download">
-                        <a href="#download"></a>Download
-                    </h1>
+                    <h1 class="page-header" id="download">Download</h1>
                     <p class="lead">Tokenize2 (currently v0.1-beta) has a few easy ways to quickly get started, each one appealing to a different skill level and use case. Read through to see what suits your particular needs.</p>
                     <div class="row bs-downloads">
                         <div class="col-sm-6">
@@ -79,20 +78,18 @@
                     <h2>Install with Bower</h2>
                     <p>You can also install and manage Tokenize2's CSS and JavaScript using <a href="http://bower.io/" target="_blank">Bower</a>:</p>
                     <figure class="highlight">
-                        <pre><code class="prettyprint">$ bower install tokenize2</code></pre>
+                        <pre class="prettyprint"><code>$ bower install tokenize2</code></pre>
                     </figure>
 
                 </div>
 
                 <div class="bs-docs-section">
 
-                    <h1 class="page-header" id="whats-included">
-                        <a href="#whats-included"></a>What's included
-                    </h1>
+                    <h1 class="page-header" id="whats-included">What's included</h1>
                     <p class="lead">Tokenize2 is downloadable in two forms, within which you'll find the following directories and files, logically grouping common resources and providing both compiled and minified variations.</p>
-                    <div class="bs-callout bs-callout-warning" id="jquery-required">
-                        <h4>jQuery and jQuery-UI required</h4>
-                        <p>Please note that Tokenize2 <strong>require jQuery and jQuery-UI</strong> to be included.</p>
+                    <div class="bs-callout bs-callout-warning">
+                        <h4>jQuery required</h4>
+                        <p>Please note that Tokenize2 <strong>require jQuery</strong> to be included in your page.</p>
                     </div>
                     <h2>Compiled Tokenize2</h2>
                     <p>Once downloaded, unzip the compressed folder to see the structure of (the compiled) Tokenize2. You'll see something like this:</p>
@@ -125,22 +122,18 @@
 
                 <div class="bs-docs-section">
 
-                    <h1 class="page-header" id="how-to-use">
-                        <a href="#how-to-use"></a>How to use
-                    </h1>
+                    <h1 class="page-header" id="how-to-use">How to use</h1>
                     <p class="lead">See in this section how to use Tokenize2 on your website.</p>
                     <p>To start, you have to include required jQuery and jQuery-UI librairies.</p>
-                    <figure class="highlight"><pre><code class="prettyprint">&lt;script src="//code.jquery.com/jquery-2.2.4.min.js"&gt;&lt;/script&gt;
-&lt;script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"&gt;&lt;/script&gt;</code></pre></figure>
+                    <figure class="highlight"><pre class="prettyprint"><code>&lt;script src="//code.jquery.com/jquery-2.2.4.min.js"&gt;&lt;/script&gt;</code></pre></figure>
                     <p>Tokenize2 was created for <a href="https://getbootstrap.com" target="_blank">Bootstrap Framework</a>, so it's highly recommended to include Bootstrap CSS file.</p>
-                    <figure class="highlight"><pre><code class="prettyprint">&lt;link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" /&gt;</code></pre></figure>
+                    <figure class="highlight"><pre class="prettyprint"><code>&lt;link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" /&gt;</code></pre></figure>
                     <p>Next just include the Tokenize2 CSS and Javascript files.</p>
-                    <figure class="highlight"><pre><code class="prettyprint">&lt;script src="tokenize2.min.js"&gt;&lt;/script&gt;
+                    <figure class="highlight"><pre class="prettyprint"><code>&lt;script src="tokenize2.min.js"&gt;&lt;/script&gt;
 &lt;link href="tokenize2.min.css" rel="stylesheet" /&gt;</code></pre></figure>
                     <p>Be sure that Tokenize2 CSS file is included <b>after Bootstrap CSS file</b>, because some Bootstrap classes are overrided by Tokenize2.</p>
-                    <p>Finally create add a select to your code and call the plugin.</p>
+                    <p>Finally add a <code>&lt;select&gt;</code> form control to your code and call the plugin.</p>
                     <div class="bs-example">
-                        <p>Type one "a" in the text box below.</p>
                         <select class="tokenize-demo" multiple>
                             <option value="Africa">Africa</option>
                             <option value="Americas">Americas</option>
@@ -150,7 +143,7 @@
                         </select>
                         <script>$('.tokenize-demo').tokenize2()</script>
                     </div>
-                    <figure class="highlight"><pre><code class="prettyprint">&lt;select class="tokenize-demo" multiple&gt;
+                    <figure class="highlight"><pre class="prettyprint"><code>&lt;select class="tokenize-demo" multiple&gt;
     &lt;option value="Africa"&gt;Africa&lt;/option&gt;
     &lt;option value="Americas"&gt;Americas&lt;/option&gt;
     &lt;option value="Asia"&gt;Asia&lt;/option&gt;
@@ -158,6 +151,10 @@
     &lt;option value="Oceania"&gt;Oceania&lt;/option&gt;
 &lt;/select&gt;
 &lt;script&gt;$('.tokenize-demo').tokenize2();&lt;/script&gt;</code></pre></figure>
+                    <div class="bs-callout bs-callout-warning">
+                        <h4>Attribute <b>multiple</b> is required</h4>
+                        <p>Please don't forget to add attribute <code>multiple</code> to your <code>&lt;select&gt;</code> control or Tokenize2 will not work properly.</p>
+                    </div>
                 </div>
 
             </div>
