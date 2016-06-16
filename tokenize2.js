@@ -908,6 +908,21 @@
     };
 
     /**
+     * Retrieve tokens value to an array
+     *
+     * @returns {Array}
+     */
+    Tokenize2.prototype.toArray = function(){
+
+        var $output = [];
+        $("option:selected", this.element).each(function(){
+            $output.push($(this).val());
+        });
+        return $output;
+
+    };
+
+    /**
      * Tokenize plugin main function
      *
      * @param {object} options
