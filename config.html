@@ -242,13 +242,11 @@
                     </div>
                     <div class="bs-example">
                         <select class="tokenize-sortable-demo" multiple>
-                            <option selected value="Africa">Africa</option>
-                            <option selected value="Americas">Americas</option>
-                            <option selected value="Asia">Asia</option>
-                            <option value="Europe">Europe</option>
-                            <option value="Oceania">Oceania</option>
+                            <option selected value="Switzerland">Switzerland</option>
+                            <option selected value="France">France</option>
+                            <option selected value="Germany">Germany</option>
                         </select>
-                        <script>$('.tokenize-sortable-demo').tokenize2({sortable: true})</script>
+                        <script>$('.tokenize-sortable-demo').tokenize2({sortable: true, dataSource: 'https://zellerda.com/demo/tokenize2/remote.php'})</script>
                         <p>Results using <code>$('.tokenize-sortable-demo').data('tokenize2').toArray().join(', ')</code>:</p>
                         <pre class="console"><code id="tokenize-sortable-demo-console"></code></pre>
                     </div>
