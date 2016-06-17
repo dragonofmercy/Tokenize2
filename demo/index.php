@@ -137,6 +137,17 @@ function select_options($selected = array()){
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Custom dataSource (callable)</h2>
+                    </div>
+                    <div class="panel-body">
+                        <select class="tokenize-callable-demo1" multiple></select>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <script>
@@ -158,6 +169,22 @@ function select_options($selected = array()){
             });
             $('.tokenize-custom-demo1').tokenize2({
                 tokensAllowCustom: true
+            });
+            $('.tokenize-callable-demo1').tokenize2({
+                dataSource: function(search){
+                    var $this = $('.tokenize-callable-demo1').data('tokenize2');
+                    $.ajax('remote.php', {
+                        data: { search: search, start: 0 },
+                        dataType: 'json',
+                        success: function(data){
+                            var $items = [];
+                            $.each(data, function(k, v){
+                                $items.push(v);
+                            });
+                            $this.trigger('tokenize:dropdown:fill', [$items]);
+                        }
+                    });
+                }
             });
 
             $('#btnClear').on('mousedown touchstart', function(e){
