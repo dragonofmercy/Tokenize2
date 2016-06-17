@@ -1,7 +1,18 @@
+// Version number for download last release
+var $VERSION = '0.2-beta';
+
 $(function(){
     // Scrollspy
     var $window = $(window);
     var $body = $(document.body);
+
+    $('[data-replace=true]').each(function(){
+        if($(this).attr('href')){
+            $(this).attr('href', $(this).attr('href').replace(/{%version%}/g, $VERSION));
+        } else {
+            $(this).html($(this).html().replace(/{%version%}/g, $VERSION));
+        }
+    });
 
     $body.scrollspy({
         target: '.bs-docs-sidebar'

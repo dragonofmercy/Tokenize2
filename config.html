@@ -266,17 +266,69 @@
                     <p>The placeholder style can be customized using <code>.tokenize > .tokens-container > .placeholder</code> CSS class.</p>
 
                     <h2 id="options-tokens-max-items">tokensMaxItems</h2>
+                    <p>This option allow you to restrict the maximum number of tokens.</p>
+                    <p>In the example below we have limited the number of tokens to <code>6</code>.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-max-demo" multiple></select>
+                        <script>$('.tokenize-max-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php', tokensMaxItems: 6})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-max-demo').tokenize2({
+    tokensMaxItems: 6
+});</code></pre></figure>
 
                     <h2 id="options-tokens-allow-custom">tokensAllowCustom</h2>
+                    <p>The tokensAllowCustom option allow you to create custom tokens, type a text that is not in the search result and validate it with the delimiter <code>,</code>, <code>return</code> or <code>tab</code> key.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-custom-demo" multiple></select>
+                        <script>$('.tokenize-custom-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php', tokensAllowCustom: 6})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-custom-demo').tokenize2({
+    tokensAllowCustom: true
+});</code></pre></figure>
+                    <p>In case of you type for example <code>switz</code>, the default behavior in when you type a validation key (<code>return</code> or <code>tab</code>) the token <code>Switzerland</code> will be added. If you really want to add <code>switz</code>, just hold the <code>control</code> key when pressing validation key.</p>
+                    <p>Note that this behavior dosen't work with delimiters.</p>
 
                     <h2 id="options-dropdown-max-items">dropdownMaxItems</h2>
+                    <p>This options allow you to change the maximum number of search result displayed in the dropdown. The default value is <code>10</code>.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-dropdown-demo" multiple></select>
+                        <script>$('.tokenize-dropdown-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php', dropdownMaxItems: 5})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-dropdown-demo').tokenize2({
+    dropdownMaxItems: 5
+});</code></pre></figure>
 
                     <h2 id="options-search-min-length">searchMinLength</h2>
+                    <p>The searchMinLength option allow you to specify the minimum of characters required to start searching.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-min-demo" multiple></select>
+                        <script>$('.tokenize-min-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php', searchMinLength: 3})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-min-demo').tokenize2({
+    searchMinLength: 3
+});</code></pre></figure>
 
                     <h2 id="options-search-from-start">searchFromStart</h2>
+                    <p>This options allow you to specify if Tokenize2 will search from the begining of a string, but default this option is set to <code>true</code>.</p>
+                    <p>If the example below we have set the option to <code>false</code>.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-start-demo" multiple></select>
+                        <script>$('.tokenize-start-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php?start=0', searchFromStart: false})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-start-demo').tokenize2({
+    searchFromStart: false
+});</code></pre></figure>
 
                     <h2 id="options-search-highlight">searchHighlight</h2>
-
+                    <p>The searchHighlight options allow you to choose if you want your search highlighted in the result dropdown. By default this option is set to <code>true</code>.</p>
+                    <p>If the example below we have set the option to <code>false</code>.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-highlight-demo" multiple></select>
+                        <script>$('.tokenize-highlight-demo').tokenize2({dataSource: 'https://zellerda.com/demo/tokenize2/remote.php?start=0', searchHighlight: false})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-highlight-demo').tokenize2({
+    searchHighlight: false
+});</code></pre></figure>
                 </div>
 
             </div>
