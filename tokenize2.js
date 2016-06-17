@@ -563,9 +563,9 @@
                 dataType: 'json',
                 success: $.proxy(function(data){
                     var $items = [];
-                    $.each(data, $.proxy(function(k, v){
+                    $.each(data, function(k, v){
                         $items.push(v);
-                    }, this));
+                    });
                     this.trigger('tokenize:dropdown:fill', [$items]);
                 }, this)
             });
