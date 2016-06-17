@@ -186,16 +186,17 @@
                     <p>Callable option allow you to create your own search function. In the example below we will create a custom function to call Ajax and replace <code>search</code> request data with <code>term</code>.</p>
                     <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-source-demo-3').tokenize2({
     dataSource: function(search){
+        var $this = $('.tokenize-source-demo-3').data('tokenize2');
         $.ajax('remote.php', {
-            data: { term: search },
+            data: { search: search, start: 0 },
             dataType: 'json',
-            success: $.proxy(function(data){
+            success: function(data){
                 var $items = [];
-                $.each(data, $.proxy(function(k, v){
+                $.each(data, function(k, v){
                     $items.push(v);
-                }, this));
-                this.trigger('tokenize:dropdown:fill', [$items]);
-            }, this)
+                });
+                $this.trigger('tokenize:dropdown:fill', [$items]);
+            }
         });
     }
 });</code></pre></figure>
