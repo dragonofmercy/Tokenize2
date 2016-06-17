@@ -16,4 +16,4 @@ messages on facebook or tags on tumblr.
  
 # Documentation
 
-The documentation for Tokenize2 is available [through GitHub Pages](http://zellerda.github.io/Tokenize2/).
+The documentation for Tokenize2 is available [through GitHub Pages](https://zellerda.github.io/Tokenize2/).
