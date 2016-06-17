@@ -540,7 +540,7 @@
         if(this.options.dataSource === 'select'){
             this.dataSourceLocal(v);
         } else if(typeof this.options.dataSource === 'function'){
-            this.options.dataSource(v);
+            this.options.dataSource(v, this);
         } else {
             this.dataSourceRemote(v);
         }
