@@ -149,6 +149,22 @@ function select_options($selected = array()){
             </div>
 
         </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Override dropdownItemFormat function</h2>
+                    </div>
+                    <div class="panel-body">
+                        <select class="tokenize-override-demo1" multiple>
+                            <?php echo select_options() ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
         <script>
             $('.tokenize-sample-demo1').tokenize2();
@@ -170,6 +186,7 @@ function select_options($selected = array()){
             $('.tokenize-custom-demo1').tokenize2({
                 tokensAllowCustom: true
             });
+
             $('.tokenize-callable-demo1').tokenize2({
                 dataSource: function(search){
                     var $this = $('.tokenize-callable-demo1').data('tokenize2');
@@ -184,6 +201,16 @@ function select_options($selected = array()){
                             $this.trigger('tokenize:dropdown:fill', [$items]);
                         }
                     });
+                }
+            });
+
+            $('.tokenize-override-demo1').tokenize2();
+            $.extend($('.tokenize-override-demo1').tokenize2(), {
+                dropdownItemFormat: function(v){
+                    return $('<a />').html(v.text + ' override').attr({
+                        'data-value': v.value,
+                        'data-text': v.text
+                    })
                 }
             });
 
