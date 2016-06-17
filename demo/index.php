@@ -48,10 +48,6 @@ function select_options($selected = array()){
                         <select class="tokenize-sample-demo1" multiple>
                             <?php echo select_options() ?>
                         </select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">&lt;!-- Don't forget the attribute multiple !--&gt;
-&lt;select class="tokenize-sample-demo1" multiple&gt;&lt;/select&gt;
-&lt;script&gt;$('.tokenize-sample-demo1').tokenize2();&lt;/script&gt;</pre>
                     </div>
                 </div>
             </div>
@@ -63,10 +59,6 @@ function select_options($selected = array()){
                     </div>
                     <div class="panel-body">
                         <select class="tokenize-remote-demo1" multiple></select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-remote-demo1').tokenize2({
-    dataSource: 'remote.php'
-});</pre>
                     </div>
                 </div>
             </div>
@@ -83,10 +75,6 @@ function select_options($selected = array()){
                         <select class="tokenize-limit-demo1" multiple>
                             <?php echo select_options() ?>
                         </select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-limit-demo1').tokenize2({
-    tokensMaxItems: 5
-});</pre>
                     </div>
                 </div>
             </div>
@@ -100,10 +88,6 @@ function select_options($selected = array()){
                         <select class="tokenize-limit-demo2" multiple>
                             <?php echo select_options() ?>
                         </select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-limit-demo2').tokenize2({
-    tokensMaxItems: 1
-});</pre>
                     </div>
                 </div>
             </div>
@@ -120,10 +104,6 @@ function select_options($selected = array()){
                         <select class="tokenize-sortable-demo1" multiple>
                             <?php echo select_options(array('CH', 'FR', 'IT', 'DE')) ?>
                         </select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-sortable-demo1').tokenize2({
-    sortable: true
-});</pre>
                     </div>
                 </div>
             </div>
@@ -137,10 +117,6 @@ function select_options($selected = array()){
                         <select class="tokenize-ph-demo1" multiple>
                             <?php echo select_options() ?>
                         </select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-ph-demo1').tokenize2({
-    placeholder: 'Please add new tokens'
-});</pre>
                     </div>
                 </div>
             </div>
@@ -157,10 +133,6 @@ function select_options($selected = array()){
                         <select class="tokenize-custom-demo1" multiple>
                             <?php echo select_options() ?>
                         </select>
-                        <h3>How to:</h3>
-                        <pre class="prettyprint no-mar">$('.tokenize-custom-demo1').tokenize2({
-    tokensAllowCustom: true
-});</pre>
                     </div>
                 </div>
             </div>
