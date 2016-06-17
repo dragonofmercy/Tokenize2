@@ -1,13 +1,14 @@
 <?php
 header('content-type: text/json');
 
+$search = preg_quote(isset($_REQUEST['search']) ? $_REQUEST['search'] : '');
+$start = (isset($_REQUEST['start']) ? $_REQUEST['start'] : 0);
 $obj = json_decode(file_get_contents('names.json'), true);
-$search = preg_quote($_REQUEST['search']);
 $ret = array();
 
 foreach($obj as $item)
 {
-    if(preg_match('/^' . $search . '/i', $item['text']))
+    if(preg_match('/' . ($start ? '^' : '') . $search . '/i', $item['text']))
     {
         $ret[] = array('value' => $item['text'], 'text' => $item['text']);
     }
