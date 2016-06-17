@@ -751,8 +751,14 @@
      */
     Tokenize2.prototype.dropdownItemFormat = function(item){
 
-        var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.lastSearchTerms) + ')', 'gi');
-        var $display = item.text.replace($regex, '<span class="tokenize-highlight">$1</span>');
+        var $display = '';
+
+        if(this.options.searchHighlight){
+            var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.lastSearchTerms) + ')', 'gi');
+            $display = item.text.replace($regex, '<span class="tokenize-highlight">$1</span>');
+        } else {
+            $display = item.text;
+        }
 
         return $('<a />').html($display).attr({
             'data-value': item.value,
