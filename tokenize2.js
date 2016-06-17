@@ -932,19 +932,26 @@
      * Tokenize plugin main function
      *
      * @param {object} options
-     * @returns {*}
+     * @returns {object|Tokenize2|Array}
      */
     function Plugin(options){
 
-        return this.filter('select').each(function(){
+        var $items = [];
+        this.filter('select').each(function(){
             var $this = $(this);
             var $data = $this.data('tokenize2');
             var $options = typeof options == 'object' && options;
             if(!$data){
                 $this.data('tokenize2', new Tokenize2(this, $options));
             }
+            $items.push($this.data('tokenize2'));
         });
 
+        if($items.length > 1){
+            return $items;
+        } else {
+            return $items[0];
+        }
     }
 
     var old = $.fn.tokenize2;
