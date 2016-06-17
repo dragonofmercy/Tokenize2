@@ -20,14 +20,13 @@ function select_options($selected = array()){
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 
     <link href="../tokenize2.css" rel="stylesheet" />
     <script src="../tokenize2.js"></script>
     <link href="demo.css" rel="stylesheet" />
 
 </head>
-<body onload="prettyPrint()">
+<body>
 
     <div class="container">
 
