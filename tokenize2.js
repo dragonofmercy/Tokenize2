@@ -513,11 +513,12 @@
 
     Tokenize2.prototype.pressedDelimiter = function(e){
         this.resetPending();
-        e.preventDefault();
         if(this.isDropdownOpen() && $('li.active', this.dropdown).length > 0 && this.control === false){
+            e.preventDefault();
             $('li.active a', this.dropdown).trigger('mousedown');
         } else {
             if(this.input.val().length > 0){
+                e.preventDefault();
                 this.trigger('tokenize:tokens:add', [this.input.val()]);
             }
         }
