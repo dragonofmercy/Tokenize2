@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v0.2-beta (https://github.com/zellerda/Tokenize2)
+ * Tokenize2 v0.3-beta (https://github.com/zellerda/Tokenize2)
  * Copyright 2016 David Zeller.
  * Licensed under the new BSD license
  */
@@ -68,7 +68,7 @@
         MAJ: 16
     };
 
-    Tokenize2.VERSION = '0.2-beta';
+    Tokenize2.VERSION = '0.3-beta';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
