@@ -188,8 +188,7 @@ function select_options($selected = array()){
             });
 
             $('.tokenize-callable-demo1').tokenize2({
-                dataSource: function(search){
-                    var $this = $('.tokenize-callable-demo1').data('tokenize2');
+                dataSource: function(search, object){
                     $.ajax('remote.php', {
                         data: { search: search, start: 0 },
                         dataType: 'json',
@@ -198,7 +197,7 @@ function select_options($selected = array()){
                             $.each(data, function(k, v){
                                 $items.push(v);
                             });
-                            $this.trigger('tokenize:dropdown:fill', [$items]);
+                            object.trigger('tokenize:dropdown:fill', [$items]);
                         }
                     });
                 }
