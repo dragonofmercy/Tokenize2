@@ -163,7 +163,7 @@
         if(this.options.placeholder !== false){
             this.placeholder = $('<li class="placeholder" />').html(this.options.placeholder);
             this.tokensContainer.prepend(this.placeholder);
-            this.element.on('tokenize:remap tokenize:select tokenize:deselect tokenize:tokens:remove', $.proxy(function(){
+            this.element.on('tokenize:tokens:add tokenize:remap tokenize:select tokenize:deselect tokenize:tokens:remove', $.proxy(function(){
                 if(this.container.hasClass('focus') || $('li.token', this.tokensContainer).length > 0 || this.input.val().length > 0){
                     this.placeholder.hide();
                 } else {
