@@ -186,8 +186,7 @@
                     <h3>Usage with callable datas <small class="text-danger"><b>(Experimental)</b></small></h3>
                     <p>Callable option allow you to create your own search function. In the example below we will create a custom function to call Ajax and replace <code>search</code> request data with <code>term</code>.</p>
                     <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-source-demo-3').tokenize2({
-    dataSource: function(search){
-        var $this = $('.tokenize-source-demo-3').data('tokenize2');
+    dataSource: function(search, object){
         $.ajax('remote.php', {
             data: { search: search, start: 0 },
             dataType: 'json',
@@ -196,7 +195,7 @@
                 $.each(data, function(k, v){
                     $items.push(v);
                 });
-                $this.trigger('tokenize:dropdown:fill', [$items]);
+                object.trigger('tokenize:dropdown:fill', [$items]);
             }
         });
     }
