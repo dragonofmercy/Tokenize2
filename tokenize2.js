@@ -730,12 +730,15 @@
         if(this.isDropdownOpen()){
             var $li = $('<li class="dropdown-item" />').html(this.dropdownItemFormat(item))
                 .on('mouseover', $.proxy(function(e){
+                    e.preventDefault();
+                    e.target = this.fixTarget(e.target);
                     $('li', this.dropdown).removeClass('active');
                     $(e.target).parent().addClass('active');
                 }, this)).on('mouseout', $.proxy(function(){
                     $('li', this.dropdown).removeClass('active');
                 }, this)).on('mousedown touchstart', $.proxy(function(e){
                     e.preventDefault();
+                    e.target = this.fixTarget(e.target);
                     this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text'), true]);
                 }, this));
             if($('li.token[data-value="' + $li.find('a').attr('data-value') + '"]', this.tokensContainer).length < 1){
@@ -744,6 +747,19 @@
             }
         }
 
+    };
+
+    /**
+     * Fix target for hover and click event on dropdown items
+     *
+     * @param {string} target
+     * @returns {string}
+     */
+    Tokenize2.prototype.fixTarget = function(target){
+        if(!$(target).data('value')){
+            target = $(target).parents('[data-value]').get(0);
+        }
+        return target;
     };
 
     /**
