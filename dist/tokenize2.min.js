@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v0.3-beta (https://github.com/zellerda/Tokenize2)
+ * Tokenize2 v0.4-beta (https://github.com/zellerda/Tokenize2)
  * Copyright 2016 David Zeller.
  * Licensed under the new BSD license
  */
