@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>Tokenize2 - Events</title>
+
+    <link rel="shortcut icon" type="image/png" href="favicon.png" />
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+
+    <link href="assets/tokenize2.min.css" rel="stylesheet" />
+    <script src="assets/tokenize2.min.js"></script>
+    <link href="assets/docs.css" rel="stylesheet" />
+    <script src="assets/application.js"></script>
+
+</head>
+<body onload="prettyPrint()">
+
+<header class="navbar navbar-static-top bs-docs-nav" id="top">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Tokenize2</a>
+        </div>
+        <nav id="bs-navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Getting started</a></li>
+                <li><a href="config.html">Configuration</a></li>
+                <li class="active"><a href="events.html">Events</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="bs-page">
+
+    <div class="bs-docs-header" id="content" tabindex="-1">
+        <div class="container">
+            <h1>Events</h1>
+            <p>Tokenize2 is based on events you can catch.</p>
+        </div>
+    </div>
+
+    <div class="container bs-docs-container">
+
+        <div class="row">
+            <div class="col-md-9" role="main">
+
+                <div class="bs-docs-section">
+
+                    <h1 class="page-header" id="overview">Overview</h1>
+                    <p class="lead">Tokenize2 is event based, all major calls are triggered through events.</p>
+
+                    <h2 id="events-usage">Usage</h2>
+
+                    <p>In the example below, we catch <code>tokenize:dropdown:itemAdd</code> event to print in the console the value of the item inserted in the dropdown.</p>
+
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-demo').on('tokenize:dropdown:itemAdd', function(e, value){
+    console.log(value);
+});</code></pre></figure>
+
+                    <p>The first agrument <code>e</code> is never used but has to be writed in the code.</p>
+
+                    <p>If you want to add a token in Tokenize2, you have to use the event system as the example below.</p>
+
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-demo').trigger('tokenize:tokens:add', ['token value', 'token display text', true]);</code></pre></figure>
+
+                    <p>Note that the third argument must be set to <code>true</code> if <code>tokensAllowCustom</code> is set to <code>false</code>.</p>
+
+                    <h2 id="events-list">Events</h2>
+
+                    <p>Below the list of all events used by Tokenize2.</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped js-options-table">
+                            <thead>
+                            <tr>
+                                <th>Events</th>
+                                <th>Arguments</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>tokenize:load</td>
+                                <td>none</td>
+                                <td>Fired on Tokenize2 initialization</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:clear</td>
+                                <td>none</td>
+                                <td>Fired when clear tokens</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:remap</td>
+                                <td>none</td>
+                                <td>Fired when Tokenize2 match the select with tokens</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:select</td>
+                                <td>none</td>
+                                <td>Fired when focus</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:deselect</td>
+                                <td>none</td>
+                                <td>Fired when blur</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:search</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_search">[string]</a></td>
+                                <td>Fired when search</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:paste</td>
+                                <td>none</td>
+                                <td>Fired when paste a text in search input</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:clear</td>
+                                <td>none</td>
+                                <td>Fired when clear tokens</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:up</td>
+                                <td>none</td>
+                                <td>Fired when type <code>up</code> in dropdown</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:down</td>
+                                <td>none</td>
+                                <td>Fired when type <code>down</code> in dropdown</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:clear</td>
+                                <td>none</td>
+                                <td>Fired when dropdown items are cleared</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:show</td>
+                                <td>none</td>
+                                <td>Fired when dropdown show</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:hide</td>
+                                <td>none</td>
+                                <td>Fired when dropdown hide</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:fill</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_dropdown_fill">[array of object]</a></td>
+                                <td>Fired when dropdown items are added</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:dropdown:itemAdd</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_dropdown_item_add">[object]</a></td>
+                                <td>Fired when dropdown item is added</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:keypress</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_keypress">[event]</a></td>
+                                <td>Fired when keypress</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:keydown</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_keydown">[event]</a></td>
+                                <td>Fired when keydown</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:keyup</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_keyup">[event]</a></td>
+                                <td>Fired when keyup</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:tokens:reorder</td>
+                                <td>none</td>
+                                <td>Fired when tokens are reordered</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:tokens:add</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_tokens_add">[string, string, boolean]</a></td>
+                                <td>Fired when token is added</td>
+                            </tr>
+                            <tr>
+                                <td>tokenize:tokens:remove</td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_tokens_remove">[string]</a></td>
+                                <td>Fired when token is removed</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="modal fade" id="modal_argument" tabindex="-1" role="dialog" aria-labelledby="modalArgument">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel"></h4>
+                                </div>
+                                <div class="modal-body"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_search">
+                        <div class="title">tokenize:search</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e       Not used
+ * @param {string}  value   The search value
+ */
+Event('tokenize:search', function(e, value){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_dropdown_fill">
+                        <div class="title">tokenize:dropdown:fill</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e       Not used
+ * @param {array}   items   List of {value: string, text: string}
+ */
+Event('tokenize:dropdown:fill', function(e, items){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_dropdown_item_add">
+                        <div class="title">tokenize:dropdown:itemAdd</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e       Not used
+ * @param {object}  item    {value: string, text: string}
+ */
+Event('tokenize:dropdown:itemAdd', function(e, item){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_keypress">
+                        <div class="title">tokenize:keypress</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e               Not used
+ * @param {event}   routedEvent     Base event
+ */
+Event('tokenize:keypress', function(e, routedEvent){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_keydown">
+                        <div class="title">tokenize:keydown</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e               Not used
+ * @param {event}   routedEvent     Base event
+ */
+Event('tokenize:keydown', function(e, routedEvent){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_keyup">
+                        <div class="title">tokenize:keyup</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e               Not used
+ * @param {event}   routedEvent     Base event
+ */
+Event('tokenize:keyup', function(e, routedEvent){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_tokens_add">
+                        <div class="title">tokenize:tokens:add</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e       Not used
+ * @param {string}  value   The token value
+ * @param {string}  text    The token display text
+ * @param {boolean} force   Must be true if tokensAllowCustom is false
+ */
+Event('tokenize:tokens:add', function(e, value, text, force){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_tokens_remove">
+                        <div class="title">tokenize:tokens:remove</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e       Not used
+ * @param {string}  value   The token value
+ */
+Event('tokenize:tokens:remove', function(e, value){});</code></pre></figure></div>
+                    </div>
+
+                    <script>
+                        $('#modal_argument').on('show.bs.modal', function (event) {
+                            var target = $('#' + $(event.relatedTarget).data('whatever'));
+                            $(this).find('.modal-title').html($('.title', target).html());
+                            $(this).find('.modal-body').html($('.body', target).html());
+                        })
+                    </script>
+
+                </div>
+
+            </div>
+            <div class="col-md-3" role="complementary">
+                <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm">
+                    <ul class="nav bs-docs-sidenav">
+                        <li>
+                            <a href="#overview">Overview</a>
+                            <ul class="nav">
+                                <li><a href="#events-usage">Usage</a></li>
+                                <li><a href="#events-list">Events</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <a class="back-to-top" href="#top"> Back to top </a>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="bs-docs-footer">
+        <div class="container">
+            <ul class="bs-docs-footer-links">
+                <li><a href="https://github.com/zellerda/Tokenize2" target="_blank">GitHub</a></li>
+                <li><a href="">Twitter</a></li>
+            </ul>
+            <p>Code licensed <a href="https://raw.githubusercontent.com/zellerda/Tokenize2/master/LICENSE" target="_blank">new BSD</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>
