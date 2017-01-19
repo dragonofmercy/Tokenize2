@@ -75,7 +75,7 @@
 
                     <p>If you want to add a token in Tokenize2, you have to use the event system as the example below.</p>
 
-                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-demo').trigger('tokenize:tokens:add', ['token value', 'token display text', true]);</code></pre></figure>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-demo').tokenize2().trigger('tokenize:tokens:add', ['token value', 'token display text', true]);</code></pre></figure>
 
                     <p>Note that the third argument must be set to <code>true</code> if <code>tokensAllowCustom</code> is set to <code>false</code>.</p>
 
