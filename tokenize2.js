@@ -3,7 +3,6 @@
  * Copyright 2016 David Zeller.
  * Licensed under the new BSD license
  */
-
 (function(factory){
     if (typeof define === 'function' && define.amd){
         // AMD. Register as an anonymous module.
@@ -224,6 +223,7 @@
         this.trigger('tokenize:remap');
         this.trigger('tokenize:tokens:reorder');
         this.trigger('tokenize:loaded');
+
     };
 
     /**
@@ -512,6 +512,7 @@
     };
 
     Tokenize2.prototype.pressedDelimiter = function(e){
+
         this.resetPending();
         if(this.isDropdownOpen() && $('li.active', this.dropdown).length > 0 && this.control === false){
             e.preventDefault();
@@ -522,6 +523,7 @@
                 this.trigger('tokenize:tokens:add', [this.input.val()]);
             }
         }
+
     };
 
     /**
@@ -628,9 +630,9 @@
 
         if(!this.isDropdownOpen()){
             $('.tokenize-dropdown').remove();
-            this.dropdown = $('<div class="tokenize-dropdown dropdown"><ul class="dropdown-menu" /></div>')
-                .attr('data-related', this.id);
-            $('body').append(this.dropdown.show());
+            this.dropdown = $('<div class="tokenize-dropdown dropdown"><ul class="dropdown-menu" /></div>').attr('data-related', this.id);
+            $('body').append(this.dropdown);
+            this.dropdown.show();
             $(window).on('resize scroll', {}, $.proxy(function(){ this.dropdownMove() }, this)).trigger('resize');
             this.trigger('tokenize:dropdown:shown');
         }
@@ -756,10 +758,12 @@
      * @returns {string}
      */
     Tokenize2.prototype.fixTarget = function(target){
+
         if(!$(target).data('value')){
             target = $(target).parents('[data-value]').get(0);
         }
         return target;
+
     };
 
     /**
@@ -771,7 +775,6 @@
     Tokenize2.prototype.dropdownItemFormat = function(item){
 
         var $display = '';
-
         if(this.options.searchHighlight){
             var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.transliteration(this.lastSearchTerms)) + ')', 'gi');
             $display = item.text.replace($regex, '<span class="tokenize-highlight">$1</span>');
