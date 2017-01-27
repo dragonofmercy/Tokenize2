@@ -80,6 +80,10 @@
     width: 100%;
 }
 
+.tokenize > .tokens-container > .token-search > input::-ms-clear {
+    display: none;
+}
+
 .tokenize > .tokens-container.input-sm > .placeholder,
 .tokenize > .tokens-container.input-sm > .token-search,
 .tokenize > .tokens-container.input-sm > .token {

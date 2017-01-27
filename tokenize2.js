@@ -853,17 +853,19 @@
      */
     Tokenize2.prototype.scaleInput = function(){
 
-        var $canvas = document.createElement('canvas');
-        var $ctx = $canvas.getContext('2d');
+        if(!this.ctx){
+            this.ctx = document.createElement('canvas').getContext('2d');
+        }
+
         var $width, $tokensContainerWidth;
 
-        $ctx.font = this.input.css('font-style') + ' ' +
+        this.ctx.font = this.input.css('font-style') + ' ' +
             this.input.css('font-variant') + ' ' +
             this.input.css('font-weight') + ' ' +
             Math.ceil(parseFloat(this.input.css('font-size'))) + 'px ' +
             this.input.css('font-family');
 
-        $width = Math.round($ctx.measureText(this.input.val() + 'M').width) + Math.ceil(parseFloat(this.searchContainer.css('margin-left'))) + Math.ceil(parseFloat(this.searchContainer.css('margin-right')));
+        $width = Math.round(this.ctx.measureText(this.input.val() + 'M').width) + Math.ceil(parseFloat(this.searchContainer.css('margin-left'))) + Math.ceil(parseFloat(this.searchContainer.css('margin-right')));
         $tokensContainerWidth = this.tokensContainer.width() -
             (
                 Math.ceil(parseFloat(this.tokensContainer.css('border-left-width'))) + Math.ceil(parseFloat(this.tokensContainer.css('border-right-width')) +
@@ -875,7 +877,7 @@
         }
 
         this.searchContainer.width($width);
-        $canvas.remove();
+        this.ctx.restore();
 
     };
 
