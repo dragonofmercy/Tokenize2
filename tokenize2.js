@@ -645,7 +645,7 @@
     Tokenize2.prototype.dropdownHide = function(){
 
         if(this.isDropdownOpen()){
-            $(window).off('resize');
+            $(window).off('resize scroll');
             this.dropdown.remove();
             this.dropdown = undefined;
             this.trigger('tokenize:dropdown:hidden');
