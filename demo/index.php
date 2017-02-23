@@ -214,7 +214,7 @@ function select_options($selected = array()){
 
             $('#btnClear').on('mousedown touchstart', function(e){
                 e.preventDefault();
-                $('.tokenize-demo1, .tokenize-demo2, .tokenize-demo3').trigger('tokenize:clear');
+                $('.tokenize-demo1, .tokenize-demo2, .tokenize-demo3').tokenize2().trigger('tokenize:clear');
             });
         </script>
 
