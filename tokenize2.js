@@ -759,8 +759,16 @@
      */
     Tokenize2.prototype.fixTarget = function(target){
 
-        if(!$(target).data('value')){
+        /*if(!$(target).data('value')){
             target = $(target).parents('[data-value]').get(0);
+        }
+        return target;*/
+
+        if(!$(target).data('value')){
+            target = $(target).find('a');
+            if(!$(target).data('value')){
+                target = $(target).parents('[data-value]').get(0);
+            }
         }
         return target;
 
