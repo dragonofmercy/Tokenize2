@@ -754,18 +754,25 @@
     /**
      * Fix target for hover and click event on dropdown items
      *
-     * @param {string} target
-     * @returns {string}
+     * @param {object} target
+     * @returns {object}
      */
     Tokenize2.prototype.fixTarget = function(target){
 
-        if(!$(target).data('value')){
-            target = $(target).find('a');
-            if(!$(target).data('value')){
-                target = $(target).parents('[data-value]').get(0);
+        var $target = $(target);
+
+        if(!$target.data('value')){
+            var $link = $target.find('a');
+            if($link.length){
+                return $link.get(0);
+            }
+            var $parent = $target.parents('[data-value]');
+            if($parent.length){
+                return $parent.get(0);
             }
         }
-        return target;
+
+        return $target.get(0);
 
     };
 
