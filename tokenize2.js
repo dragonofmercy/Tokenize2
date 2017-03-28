@@ -801,11 +801,10 @@
         var $height = this.tokensContainer.outerHeight();
         var $width = this.tokensContainer.outerWidth();
 
+        $position.top += $height;
         this.dropdown.css({
-            top: $position.top + $height,
-            left: $position.left - $(window).scrollLeft(),
             width: $width
-        });
+        }).offset($position);
 
     };
 
