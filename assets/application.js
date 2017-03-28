@@ -1,5 +1,5 @@
 // Version number for download last release
-var $VERSION = '0.4-beta';
+var $VERSION = '0.5-beta';
 
 $(function(){
     // Scrollspy
