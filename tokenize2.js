@@ -64,7 +64,8 @@
         ARROW_UP: 38,
         ARROW_DOWN: 40,
         CTRL: 17,
-        MAJ: 16
+        MAJ: 16,
+        SPACE: 32
     };
 
     Tokenize2.VERSION = '0.5-beta';
@@ -81,7 +82,9 @@
         debounce: 0,
         placeholder: false,
         sortable: false,
-        tabIndex: 0
+        tabIndex: 0,
+        ariaSearchLabel: 'Search input',
+        removeButtonTitle: 'Remove {0}'
     };
 
     /**
@@ -153,11 +156,17 @@
                     }, this), 10);
                 }
             }, this));
-
+        if (this.options.ariaSearchLabel) {
+          this.input.attr('aria-label', this.options.ariaSearchLabel);
+        }
+        this.input.attr('tabindex', this.options.tabIndex);
         this.tokensContainer = $('<ul class="tokens-container form-control" />')
             .addClass(this.element.attr('data-class'))
-            .attr('tabindex', this.options.tabIndex)
-            .append(this.searchContainer.append(this.input));
+            .append(this.searchContainer.append(this.input))
+            .on('mousedown touchstart', {}, $.proxy(function (e) {
+              e.preventDefault();
+              this.input.focus();
+            }, this));
 
         if(this.options.placeholder !== false){
             this.placeholder = $('<li class="placeholder" />').html(this.options.placeholder);
@@ -306,13 +315,18 @@
             this.trigger('tokenize:tokens:error:notokensAllowCustom');
             return this;
         }
-
+        var title = this.options.removeButtonTitle ?  this.options.removeButtonTitle.replace('{0}', text) : '';
         $('<li class="token" />')
             .attr('data-value', value)
             .append('<span>' + text + '</span>')
-            .prepend($('<a class="dismiss" />').html('&#215;').on('mousedown touchstart', {}, $.proxy(function(e){
+            .prepend($('<a class="dismiss" role="button" tabindex="0"/>').attr('title', title).html('&#215;').on('mousedown touchstart', {}, $.proxy(function(e){
                 e.preventDefault();
                 this.trigger('tokenize:tokens:remove', [value]);
+            }, this)).on('keypress', {}, $.proxy(function (e) {
+              if (e.keyCode === KEYS.ENTER || e.keyCode === KEYS.SPACE) {
+                e.preventDefault();
+                this.trigger('tokenize:tokens:remove', [value]);
+              }
             }, this)))
             .insertBefore(this.searchContainer);
 
