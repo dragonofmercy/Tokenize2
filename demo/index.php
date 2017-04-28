@@ -189,7 +189,7 @@ function select_options($selected = array()){
             $('.tokenize-callable-demo1').tokenize2({
                 dataSource: function(search, object){
                     $.ajax('remote.php', {
-                        data: { search: search, start: 0 },
+                        data: { search: search, start: 1 },
                         dataType: 'json',
                         success: function(data){
                             var $items = [];
