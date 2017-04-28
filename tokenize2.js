@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v0.5-beta (https://github.com/zellerda/Tokenize2)
+ * Tokenize2 v0.6-beta (https://github.com/zellerda/Tokenize2)
  * Copyright 2016 David Zeller.
  * Licensed under the new BSD license
  */
@@ -310,7 +310,7 @@
         $('<li class="token" />')
             .attr('data-value', value)
             .append('<span>' + text + '</span>')
-            .prepend($('<a class="dismiss" />').html('&#215;').on('mousedown touchstart', {}, $.proxy(function(e){
+            .prepend($('<a class="dismiss" />').on('mousedown touchstart', {}, $.proxy(function(e){
                 e.preventDefault();
                 this.trigger('tokenize:tokens:remove', [value]);
             }, this)))
@@ -784,18 +784,20 @@
      */
     Tokenize2.prototype.dropdownItemFormat = function(item){
 
-        var $display = '';
-        if(this.options.searchHighlight){
-            var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.transliteration(this.lastSearchTerms)) + ')', 'gi');
-            $display = item.text.replace($regex, '<span class="tokenize-highlight">$1</span>');
-        } else {
-            $display = item.text;
-        }
+        if(item.hasOwnProperty('text')){
+            var $display = '';
+            if(this.options.searchHighlight){
+                var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.transliteration(this.lastSearchTerms)) + ')', 'gi');
+                $display = item.text.replace($regex, '<span class="tokenize-highlight">$1</span>');
+            } else {
+                $display = item.text;
+            }
 
-        return $('<a />').html($display).attr({
-            'data-value': item.value,
-            'data-text': item.text
-        });
+            return $('<a />').html($display).attr({
+                'data-value': item.value,
+                'data-text': item.text
+            });
+        }
 
     };
 

@@ -111,6 +111,10 @@
     cursor: pointer;
 }
 
+.tokenize > .tokens-container > .token > .dismiss:after {
+    content: "×";
+}
+
 .tokenize > .tokens-container > .token.pending-delete > .dismiss {
     color: #aaa;
 }
@@ -133,6 +137,11 @@
 
 .tokenize-dropdown > .dropdown-menu li > a .tokenize-highlight {
     font-weight: bold;
+}
+
+.tokenize-dropdown > .dropdown-menu li > a {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
 }
 
 .tokenize-dropdown > .dropdown-menu li:not(.active) a:hover,
