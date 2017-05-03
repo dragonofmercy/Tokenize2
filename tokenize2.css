@@ -129,6 +129,8 @@
     width: 100%;
     display: block;
     margin: -1px 0 0 0;
+    visibility: visible;
+    opacity: 1;
 }
 
 .tokenize-dropdown > .dropdown-menu li {
