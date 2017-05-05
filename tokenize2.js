@@ -177,10 +177,10 @@
         this.container = $('<div class="tokenize" />').attr('id', this.id);
         this.container.append(this.tokensContainer).insertAfter(this.element);
         this.container.focusin($.proxy(function(e){
-            this.trigger('tokenize:select', [($(e.target)[0] === this.tokensContainer[0])])
+            this.trigger('tokenize:select', [($(e.target)[0] === this.tokensContainer[0])]);
         }, this))
         .focusout($.proxy(function(){
-            this.trigger('tokenize:deselect')
+            this.trigger('tokenize:deselect');
         }, this));
 
         if(this.options.tokensMaxItems === 1){
@@ -389,13 +389,16 @@
         }
         this.container.removeClass('focus');
         this.resetPending();
+        if(!this.tokensContainer.attr('tabindex')){
+            this.tokensContainer.attr('tabindex', this.options.tabIndex);
+        }
 
     };
 
     /**
      * Keydown
      *
-     * @param {object} e
+     * @param {Event} e
      */
     Tokenize2.prototype.keydown = function(e){
 
@@ -418,6 +421,13 @@
                     break;
 
                 case KEYS.TAB:
+                    if(!e.shiftKey){
+                        this.pressedDelimiter(e);
+                    } else {
+                        this.tokensContainer.removeAttr('tabindex');
+                    }
+                    break;
+
                 case KEYS.ENTER:
                     this.pressedDelimiter(e);
                     break;
@@ -454,7 +464,7 @@
     /**
      * Keyup
      *
-     * @param {object} e
+     * @param {Event} e
      */
     Tokenize2.prototype.keyup = function(e){
 
@@ -488,7 +498,7 @@
     /**
      * Keypress
      *
-     * @param {object} e
+     * @param {Event} e
      */
     Tokenize2.prototype.keypress = function(e){
 
@@ -514,6 +524,11 @@
 
     };
 
+    /**
+     * When a delimiter is pressed
+     *
+     * @param {Event} e
+     */
     Tokenize2.prototype.pressedDelimiter = function(e){
 
         this.resetPending();
