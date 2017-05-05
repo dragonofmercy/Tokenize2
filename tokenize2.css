@@ -141,6 +141,13 @@
     font-weight: bold;
 }
 
+.tokenize-dropdown > .dropdown-menu li.locked {
+    padding: 3px 20px;
+    color: #333;
+    white-space: nowrap;
+}
+
+.tokenize-dropdown > .dropdown-menu li.locked,
 .tokenize-dropdown > .dropdown-menu li > a {
     text-overflow: ellipsis;
     overflow-x: hidden;

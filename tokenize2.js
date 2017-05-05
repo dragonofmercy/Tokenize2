@@ -76,6 +76,8 @@
         searchMinLength: 0,
         searchFromStart: true,
         searchHighlight: true,
+        displayNoResultsMessage: false,
+        noResultsMessageText: 'No results mached "%s"',
         delimiter: ',',
         dataSource: 'select',
         debounce: 0,
@@ -723,7 +725,15 @@
                 this.trigger('tokenize:dropdown:filled');
             }
         } else {
-            this.trigger('tokenize:dropdown:hide');
+            if(this.options.displayNoResultsMessage){
+                this.trigger('tokenize:dropdown:show');
+                this.trigger('tokenize:dropdown:clear');
+                this.dropdown.find('.dropdown-menu').append(
+                    $('<li class="dropdown-item locked" />').html(this.options.noResultsMessageText.replace('%s', this.input.val()))
+                );
+            } else {
+                this.trigger('tokenize:dropdown:hide');
+            }
         }
 
         // Fix the dropdown position when page start scroll
