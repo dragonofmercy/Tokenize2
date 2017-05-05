@@ -58,7 +58,6 @@
      */
     var KEYS = {
         BACKSPACE: 8,
-        TAB: 9,
         ENTER: 13,
         ESCAPE: 27,
         ARROW_UP: 38,
@@ -315,19 +314,25 @@
             this.trigger('tokenize:tokens:error:notokensAllowCustom');
             return this;
         }
-        var title = this.options.removeButtonTitle ?  this.options.removeButtonTitle.replace('{0}', text) : '';
+        var title = this.options.removeButtonTitle ?  this.options.removeButtonTitle.replace('{0}', text) : '', me = this;
         $('<li class="token" />')
             .attr('data-value', value)
             .append('<span>' + text + '</span>')
-            .prepend($('<a class="dismiss" role="button" tabindex="0"/>').attr('title', title).html('&#215;').on('mousedown touchstart', {}, $.proxy(function(e){
+            .prepend($('<a class="dismiss tooltips" role="button" data-container="body" tabindex="0"/>').attr('title', title).html('&#215;').on('mousedown touchstart', function(e) {
                 e.preventDefault();
-                this.trigger('tokenize:tokens:remove', [value]);
-            }, this)).on('keypress', {}, $.proxy(function (e) {
+                if ($.fn.tooltip) {
+                  $(this).tooltip('destroy');
+                }
+                me.trigger('tokenize:tokens:remove', [value]);
+            }).on('keypress', function (e) {
               if (e.keyCode === KEYS.ENTER || e.keyCode === KEYS.SPACE) {
                 e.preventDefault();
-                this.trigger('tokenize:tokens:remove', [value]);
+                if ($.fn.tooltip) {
+                  $(this).tooltip('destroy');
+                }
+                me.trigger('tokenize:tokens:remove', [value]);
               }
-            }, this)))
+            }))
             .insertBefore(this.searchContainer);
 
         this.trigger('tokenize:dropdown:hide');
@@ -428,7 +433,6 @@
                     }
                     break;
 
-                case KEYS.TAB:
                 case KEYS.ENTER:
                     this.pressedDelimiter(e);
                     break;
@@ -471,7 +475,6 @@
 
         if(e.type === 'keyup'){
             switch(e.keyCode){
-                case KEYS.TAB:
                 case KEYS.ENTER:
                 case KEYS.ESCAPE:
                 case KEYS.ARROW_UP:
