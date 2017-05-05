@@ -20,6 +20,7 @@ function select_options($selected = array()){
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link href="../tokenize2.css" rel="stylesheet" />
     <script src="../tokenize2.js"></script>
@@ -163,11 +164,40 @@ function select_options($selected = array()){
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Tokenize in modal</h2>
+                    </div>
+                    <div class="panel-body">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Open modal</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <select class="tokenize-remote-modal" multiple></select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script>
             $('.tokenize-sample-demo1').tokenize2();
-            $('.tokenize-remote-demo1').tokenize2({
+            $('.tokenize-remote-demo1, .tokenize-remote-modal').tokenize2({
                 dataSource: 'remote.php'
             });
             $('.tokenize-limit-demo1').tokenize2({
