@@ -81,6 +81,7 @@
         debounce: 0,
         placeholder: false,
         sortable: false,
+        zIndexMargin: 500,
         tabIndex: 0
     };
 
@@ -174,7 +175,7 @@
         this.container = $('<div class="tokenize" />').attr('id', this.id);
         this.container.append(this.tokensContainer).insertAfter(this.element);
         this.container.focusin($.proxy(function(e){
-            this.trigger('tokenize:select', [($(e.target)[0] == this.tokensContainer[0])])
+            this.trigger('tokenize:select', [($(e.target)[0] === this.tokensContainer[0])])
         }, this))
         .focusout($.proxy(function(){
             this.trigger('tokenize:deselect')
@@ -185,7 +186,7 @@
         }
 
         if(this.options.sortable){
-            if(typeof $.ui != 'undefined'){
+            if(typeof $.ui !== 'undefined'){
                 this.container.addClass('sortable');
                 this.tokensContainer.sortable({
                     items: 'li.token',
@@ -235,7 +236,7 @@
             var previous, current;
             $.each(this.tokensContainer.sortable('toArray', {attribute: 'data-value'}), $.proxy(function(k, v){
                 current = $('option[value="' + v + '"]', this.element);
-                if(previous == undefined){
+                if(previous === undefined){
                     current.prependTo(this.element);
                 } else {
                     previous.after(current);
@@ -497,7 +498,7 @@
                     $delimiter = true;
                 }
             } else {
-                if(String.fromCharCode(e.which) == this.options.delimiter){
+                if(String.fromCharCode(e.which) === this.options.delimiter){
                     $delimiter = true;
                 }
             }
@@ -633,9 +634,42 @@
             this.dropdown = $('<div class="tokenize-dropdown dropdown"><ul class="dropdown-menu" /></div>').attr('data-related', this.id);
             $('body').append(this.dropdown);
             this.dropdown.show();
+            this.dropdown.css('z-index', this.calculatezindex() + this.options.zIndexMargin);
             $(window).on('resize scroll', {}, $.proxy(function(){ this.dropdownMove() }, this)).trigger('resize');
             this.trigger('tokenize:dropdown:shown');
         }
+
+    };
+
+    /**
+     * Calculate z-index
+     *
+     * @returns {int}
+     */
+    Tokenize2.prototype.calculatezindex = function(){
+
+        var el = this.container;
+        var zindex = 0;
+
+        if(!isNaN(parseInt(el.css('z-index'))) && parseInt(el.css('z-index')) > 0){
+            zindex = parseInt(el.css('z-index'));
+        }
+
+        if(zindex < 1){
+            while(el.length) {
+                el = el.parent();
+                if(el.length > 0){
+                    if(!isNaN(parseInt(el.css('z-index'))) && parseInt(el.css('z-index')) > 0){
+                        return parseInt(el.css('z-index'));
+                    }
+                    if(el.is('html')){
+                        break;
+                    }
+                }
+            }
+        }
+
+        return zindex;
 
     };
 
@@ -1825,7 +1859,7 @@
         this.filter('select').each(function(){
             var $this = $(this);
             var $data = $this.data('tokenize2');
-            var $options = typeof options == 'object' && options;
+            var $options = typeof options === 'object' && options;
             if(!$data){
                 $this.data('tokenize2', new Tokenize2(this, $options));
             }
