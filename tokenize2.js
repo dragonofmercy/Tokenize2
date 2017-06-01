@@ -67,7 +67,7 @@
         MAJ: 16
     };
 
-    Tokenize2.VERSION = '0.5-beta';
+    Tokenize2.VERSION = '1.0';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
