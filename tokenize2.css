@@ -125,6 +125,8 @@
     width: 100%;
     display: block;
     margin: -1px 0 0 0;
+    overflow: auto;
+    max-height: 210px;
 }
 
 .tokenize-dropdown > .dropdown-menu li {
