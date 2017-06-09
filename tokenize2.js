@@ -294,7 +294,7 @@
         } else if (this.options.selectAll && value === this.options.selectAllValue) {
           // get all known tokens
           var values = [], me = this;
-          $('li a', this.dropdwon).each($.proxy(function (index, element) {
+          $('li a', this.dropdown).each($.proxy(function (index, element) {
             var value = $(element).attr('data-value');
             if (value !== this.options.selectNoneValue && value !== this.options.selectAllValue) {
               values.push([value, $(element).attr('data-text'), true]);
