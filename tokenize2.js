@@ -1,6 +1,6 @@
 /*!
- * Tokenize2 v0.6-beta (https://github.com/zellerda/Tokenize2)
- * Copyright 2016 David Zeller.
+ * Tokenize2 v1.1 (https://github.com/zellerda/Tokenize2)
+ * Copyright 2016-2017 David Zeller.
  * Licensed under the new BSD license
  */
 (function(factory){
@@ -145,7 +145,7 @@
             .on('keypress', {}, $.proxy(function(e){ this.trigger('tokenize:keypress', [e]) }, this))
             .on('keyup', {}, $.proxy(function(e){ this.trigger('tokenize:keyup', [e]) }, this))
             .on('focus', {}, $.proxy(function(){
-                if(this.input.val().length > 0){
+                if(this.input.val().length >= this.options.searchMinLength && this.input.val().length > 0){
                     this.trigger('tokenize:search', [this.input.val()]);
                 }
             }, this))
@@ -482,7 +482,7 @@
                     break;
                 case KEYS.BACKSPACE:
                 default:
-                    if(this.input.val().length > 0){
+                    if(this.input.val().length >= this.options.searchMinLength && this.input.val().length > 0){
                         this.trigger('tokenize:search', [this.input.val()]);
                     } else {
                         this.trigger('tokenize:dropdown:hide');
