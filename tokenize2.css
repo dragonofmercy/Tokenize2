@@ -42,6 +42,10 @@
     vertical-align: middle;
 }
 
+.tokenize > .tokens-container > .token-search.hidden {
+    display: none;
+}
+
 .tokenize.sortable > .tokens-container > .token {
     cursor: move;
 }
