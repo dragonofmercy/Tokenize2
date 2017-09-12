@@ -64,6 +64,7 @@
         ARROW_UP: 38,
         ARROW_DOWN: 40,
         CTRL: 17,
+        ALT: 18,
         MAJ: 16
     };
 
@@ -438,12 +439,28 @@
 
                 case KEYS.ARROW_UP:
                     e.preventDefault();
-                    this.trigger('tokenize:dropdown:up');
+                    if (e.altKey) {
+                      if (this.isDropdownOpen()) {
+                        this.dropdownHide();
+                      } else {
+                        this.trigger('tokenize:search', [this.input.val()]);
+                      }
+                    } else {
+                      this.trigger('tokenize:dropdown:up');
+                    }
                     break;
 
                 case KEYS.ARROW_DOWN:
                     e.preventDefault();
-                    this.trigger('tokenize:dropdown:down');
+                    if (e.altKey) {
+                      if (this.isDropdownOpen()) {
+                        this.dropdownHide();
+                      } else {
+                        this.trigger('tokenize:search', [this.input.val()]);
+                      }
+                    } else {
+                      this.trigger('tokenize:dropdown:down');
+                    }
                     break;
 
                 case KEYS.CTRL:
@@ -476,6 +493,7 @@
                 case KEYS.ARROW_UP:
                 case KEYS.ARROW_DOWN:
                 case KEYS.MAJ:
+                case KEYS.ALT:
                     break;
                 case KEYS.CTRL:
                     this.control = false;
