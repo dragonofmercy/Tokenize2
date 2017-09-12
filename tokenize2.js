@@ -70,6 +70,7 @@
     Tokenize2.VERSION = '1.0';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
+        allowEmpty: false,
         tokensMaxItems: 0,
         tokensAllowCustom: false,
         dropdownMaxItems: 10,
@@ -282,7 +283,7 @@
         this.resetInput();
 
         // Check if token is empty
-        if(value === undefined || value === ''){
+        if((!this.options.allowEmpty) && (value === undefined || value === '')){
             this.trigger('tokenize:tokens:error:empty');
             return this;
         }
