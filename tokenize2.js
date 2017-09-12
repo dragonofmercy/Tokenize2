@@ -709,7 +709,9 @@
      */
     Tokenize2.prototype.dropdownClear = function(){
 
-        this.dropdown.find('.dropdown-menu li').remove();
+        if(this.dropdown){
+            this.dropdown.find('.dropdown-menu li').remove();
+        }
 
     };
 
