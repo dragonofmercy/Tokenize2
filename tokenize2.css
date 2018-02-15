@@ -7,6 +7,11 @@
     cursor: text;
 }
 
+.tokenize > .tokens-container.disabled {
+    background-color: #eee;
+    cursor: not-allowed;
+}
+
 .tokenize.focus > .tokens-container {
     outline: 0;
     border-color: #66afe9;

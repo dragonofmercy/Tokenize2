@@ -228,6 +228,10 @@
         this.trigger('tokenize:tokens:reorder');
         this.trigger('tokenize:loaded');
 
+        if(this.element.is(':disabled')){
+            this.disable();
+        }
+
     };
 
     /**
@@ -366,11 +370,42 @@
     };
 
     /**
+     * Disable tokenize
+     *
+     * @returns {Tokenize2}
+     */
+    Tokenize2.prototype.disable = function(){
+
+        this.tokensContainer.addClass('disabled');
+        this.searchContainer.hide();
+        return this;
+
+    };
+
+    /**
+     * Enable tokenize
+     *
+     * @returns {Tokenize2}
+     */
+    Tokenize2.prototype.enable = function(){
+
+        this.tokensContainer.removeClass('disabled');
+        this.searchContainer.show();
+        return this;
+
+    };
+
+    /**
      * Focus
      *
      * @param {boolean} container
      */
     Tokenize2.prototype.focus = function(container){
+
+        if(this.element.is(':disabled')){
+            this.tokensContainer.blur();
+            return;
+        }
 
         if(container){
             this.input.focus();
@@ -503,7 +538,7 @@
      */
     Tokenize2.prototype.keypress = function(e){
 
-        if(e.type === 'keypress'){
+        if(e.type === 'keypress' && !this.element.is(':disabled')){
             var $delimiter = false;
 
             if(Array.isArray(this.options.delimiter)){
