@@ -83,6 +83,7 @@
         debounce: 0,
         placeholder: false,
         sortable: false,
+        allowEmptyValues: false,
         zIndexMargin: 500,
         tabIndex: 0
     };
@@ -282,7 +283,7 @@
         this.resetInput();
 
         // Check if token is empty
-        if(value === undefined || value === ''){
+        if(value === undefined ||(!this.options.allowEmptyValues && value === '')){
             this.trigger('tokenize:tokens:error:empty');
             return this;
         }
