@@ -281,7 +281,6 @@
      */
     Tokenize2.prototype.tokenAdd = function(value, text, force){
 
-        value = this.escape(value);
         text = text || value;
         force = force || false;
         this.resetInput();
@@ -299,25 +298,25 @@
         }
 
         // Check duplicate token
-        if($('li.token[data-value="' + value + '"]', this.tokensContainer).length > 0){
+        if($('li.token[data-value="' + encodeURIComponent(value) + '"]', this.tokensContainer).length > 0){
             this.trigger('tokenize:tokens:error:duplicate', [value, text]);
             return this;
         }
 
-        if($('option[value="' + value + '"]', this.element).length) {
-            $('option[value="' + value + '"]', this.element).attr('selected', 'selected').prop('selected', true);
+        if($('option[value="' + encodeURIComponent(value) + '"]', this.element).length) {
+            $('option[value="' + encodeURIComponent(value) + '"]', this.element).attr('selected', 'selected').prop('selected', true);
         } else if(force){
-            this.element.append($('<option selected />').val(value).html(text));
+            this.element.append($('<option selected />').val(encodeURIComponent(value)).text(text));
         } else if(this.options.tokensAllowCustom){
-            this.element.append($('<option selected data-type="custom" />').val(value).html(text));
+            this.element.append($('<option selected data-type="custom" />').val(encodeURIComponent(value)).text(text));
         } else {
             this.trigger('tokenize:tokens:error:notokensAllowCustom');
             return this;
         }
 
         $('<li class="token" />')
-            .attr('data-value', value)
-            .append('<span>' + text + '</span>')
+            .attr('data-value', encodeURIComponent(value))
+            .append($('<span/>').text(text))
             .prepend($('<a class="dismiss" />').on('mousedown touchstart', {}, $.proxy(function(e){
                 e.preventDefault();
                 this.trigger('tokenize:tokens:remove', [value]);
@@ -338,7 +337,7 @@
      */
     Tokenize2.prototype.tokenRemove = function(v){
 
-        var $item = $('option[value="' + v + '"]', this.element);
+        var $item = $('option[value="' + encodeURIComponent(v) + '"]', this.element);
 
         if($item.attr('data-type') === 'custom'){
             $item.remove();
@@ -346,7 +345,7 @@
             $item.removeAttr('selected').prop('selected', false);
         }
 
-        $('li.token[data-value="' + v + '"]', this.tokensContainer).remove();
+        $('li.token[data-value="' + encodeURIComponent(v) + '"]', this.tokensContainer).remove();
 
         this.trigger('tokenize:tokens:reorder');
         return this;
@@ -362,7 +361,7 @@
 
         var $selected = $('option:selected', this.element);
         $selected.each($.proxy(function(v, t) {
-            this.trigger('tokenize:tokens:add', [$(t).val(), $(t).html(), false]);
+            this.trigger('tokenize:tokens:add', [decodeURIComponent($(t).val()), $(t).text(), false]);
         }, this));
 
         return this;
@@ -444,11 +443,11 @@
                     if(this.input.val().length < 1){
                         e.preventDefault();
                         if($('li.token.pending-delete', this.tokensContainer).length > 0){
-                            this.trigger('tokenize:tokens:remove', [$('li.token.pending-delete', this.tokensContainer).first().attr('data-value')]);
+                            this.trigger('tokenize:tokens:remove', [decodeURIComponent($('li.token.pending-delete', this.tokensContainer).first().attr('data-value'))]);
                         } else {
                             var $token = $('li.token:last', this.tokensContainer);
                             if($token.length > 0){
-                                this.trigger('tokenize:tokens:markForDelete', [$token.attr('data-value')]);
+                                this.trigger('tokenize:tokens:markForDelete', [decodeURIComponent($token.attr('data-value'))]);
                                 $token.addClass('pending-delete');
                             }
                         }
@@ -646,8 +645,8 @@
         $('option', this.element)
             .not(':selected, :disabled')
             .each(function(){
-                if($regexp.test($this.transliteration($(this).html()))){
-                    $items.push({ value: $(this).attr('value'), text: $(this).html() });
+                if($regexp.test($this.transliteration($(this).text()))){
+                    $items.push({ value: decodeURIComponent($(this).attr('value')), text: $(this).text() });
                 }
             });
 
@@ -838,7 +837,7 @@
                 }, this)).on('mousedown touchstart', $.proxy(function(e){
                     e.preventDefault();
                     e.target = this.fixTarget(e.target);
-                    this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text'), true]);
+                    this.trigger('tokenize:tokens:add', [decodeURIComponent($(e.target).attr('data-value')), decodeURIComponent($(e.target).attr('data-text')), true]);
                 }, this));
             if($('li.token[data-value="' + $li.find('a').attr('data-value') + '"]', this.tokensContainer).length < 1){
                 this.dropdown.find('.dropdown-menu').append($li);
@@ -885,14 +884,14 @@
             var $display = '';
             if(this.options.searchHighlight){
                 var $regex = new RegExp((this.options.searchFromStart ? '^' : '') + '(' +this.escapeRegex(this.transliteration(this.lastSearchTerms)) + ')', 'gi');
-                $display = item.text.replace($regex, '<span class="tokenize-highlight">$1</span>');
+                $display = $('<span class="tokenize-highlight"/>').text(item.text.replace($regex, '$1'));
             } else {
                 $display = item.text;
             }
 
             return $('<a />').html($display).attr({
-                'data-value': item.value,
-                'data-text': item.text
+                'data-value': encodeURIComponent(item.value),
+                'data-text': encodeURIComponent(item.text)
             });
         }
 
@@ -933,7 +932,7 @@
     Tokenize2.prototype.clear = function(){
 
         $.each($('li.token', this.tokensContainer), $.proxy(function(e, item){
-            this.trigger('tokenize:tokens:remove', [$(item).attr('data-value')]);
+            this.trigger('tokenize:tokens:remove', [decodeURIComponent($(item).attr('data-value'))]);
         }, this));
 
         this.trigger('tokenize:dropdown:hide');
@@ -950,7 +949,7 @@
         var $token = $('li.pending-delete:last', this.tokensContainer);
 
         if($token.length > 0){
-            this.trigger('tokenize:tokens:cancelDelete', [$token.attr('data-value')]);
+            this.trigger('tokenize:tokens:cancelDelete', [decodeURIComponent($token.attr('data-value'))]);
             $token.removeClass('pending-delete');
         }
 
@@ -1054,7 +1053,7 @@
 
         var $output = [];
         $("option:selected", this.element).each(function(){
-            $output.push($(this).val());
+            $output.push(decodeURIComponent($(this).val()));
         });
         return $output;
 
