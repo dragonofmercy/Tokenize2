@@ -200,10 +200,10 @@
                         this.trigger('tokenize:tokens:reorder');
                     }, this),
                     start: $.proxy(function(){
-                        this.searchContainer.hide();
+                        this.searchContainer.addClass('hidden');
                     } , this),
                     stop: $.proxy(function(){
-                        this.searchContainer.show();
+                        this.searchContainer.removeClass('hidden');
                     }, this)
                 });
             } else {
@@ -215,9 +215,9 @@
         this.element
             .on('tokenize:tokens:add tokenize:tokens:remove', $.proxy(function(){
                 if(this.options.tokensMaxItems > 0 && $('li.token', this.tokensContainer).length >= this.options.tokensMaxItems){
-                    this.searchContainer.hide();
+                    this.searchContainer.addClass('hidden');
                 } else {
-                    this.searchContainer.show();
+                    this.searchContainer.removeClass('hidden');
                 }
             }, this))
             .on('tokenize:keydown tokenize:keyup tokenize:loaded', $.proxy(function(){
