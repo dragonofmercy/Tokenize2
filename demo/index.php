@@ -177,6 +177,23 @@ function select_options($selected = array()){
 
         </div>
 
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Disabled</h2>
+                    </div>
+                    <div class="panel-body">
+                        <select class="tokenize-disabled-demo" multiple disabled>
+                            <?php echo select_options() ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -196,7 +213,7 @@ function select_options($selected = array()){
         </div>
 
         <script>
-            $('.tokenize-sample-demo1').tokenize2();
+            $('.tokenize-sample-demo1, .tokenize-disabled-demo').tokenize2();
             $('.tokenize-remote-demo1, .tokenize-remote-modal').tokenize2({
                 dataSource: 'remote.php'
             });
