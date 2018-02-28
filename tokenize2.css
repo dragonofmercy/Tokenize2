@@ -162,3 +162,18 @@
 .tokenize-dropdown > .dropdown-menu li:not(.active) a:focus {
     background-color: transparent;
 }
+
+.tokenize-dropdown > .dropdown-menu li.tokenize-dropdown-item-select-all a,
+.tokenize-dropdown > .dropdown-menu li.tokenize-dropdown-item-select-none a {
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid rgba(0,0,0,.15);
+}
+.tokenize-dropdown > .dropdown-menu li.tokenize-dropdown-item-select-both {
+  display: inline-block;
+  width: 50%;
+}
+.tokenize-dropdown > .dropdown-menu li.tokenize-dropdown-item-select-none.tokenize-dropdown-item-select-both {
+  border-left: 1px solid #ccc;
+  border-left: 1px solid rgba(0,0,0,.15);
+}
