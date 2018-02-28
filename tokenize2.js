@@ -85,7 +85,8 @@
         sortable: false,
         allowEmptyValues: false,
         zIndexMargin: 500,
-        tabIndex: 0
+        tabIndex: 0,
+        styleDropdownItem: false
     };
 
     /**
@@ -638,7 +639,7 @@
     Tokenize2.prototype.dataSourceLocal = function(search){
 
         var $searchString = this.transliteration(search);
-        var $items = [];
+        var $items = [], $item;
         var $pattern = (this.options.searchFromStart ? '^' : '') + this.escapeRegex($searchString);
         var $regexp = new RegExp($pattern, 'i');
         var $this = this;
@@ -647,7 +648,13 @@
             .not(':selected, :disabled')
             .each(function(){
                 if($regexp.test($this.transliteration($(this).html()))){
-                    $items.push({ value: $(this).attr('value'), text: $(this).html() });
+                    $item = { value: $(this).attr('value'), text: $(this).html() };
+                    if ($this.options.styleDropdownItem) {
+                        // get style options
+                        $item.color = $(this).css('color');
+                        $item.backgroundColor = $(this).css('background-color');
+                    }
+                    $items.push($item);
                 }
             });
 
@@ -889,11 +896,19 @@
             } else {
                 $display = item.text;
             }
-
-            return $('<a />').html($display).attr({
+            $display = $('<a />').html($display).attr({
                 'data-value': item.value,
                 'data-text': item.text
             });
+            if (this.options.styleDropdownItem) {
+                if (item.color) {
+                  $display.css('color', item.color);
+                }
+                if (item.backgroundColor) {
+                  $display.css('background-color', item.backgroundColor);
+                }
+            }
+            return $display;
         }
 
     };
