@@ -16,7 +16,7 @@ function select_options($selected = array()){
 
     <title>Tokenize2 demo</title>
 
-    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
     <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>

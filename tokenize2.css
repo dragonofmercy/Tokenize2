@@ -47,6 +47,10 @@
     vertical-align: middle;
 }
 
+.tokenize > .tokens-container > .token-search {
+    min-width: 10px;
+}
+
 .tokenize.sortable > .tokens-container > .token {
     cursor: move;
 }
