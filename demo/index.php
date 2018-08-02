@@ -192,6 +192,19 @@ function select_options($selected = array()){
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Events test</h2>
+                    </div>
+                    <div class="panel-body">
+                        <select class="tokenize-events-demo" multiple>
+                            <?php echo select_options() ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -213,7 +226,7 @@ function select_options($selected = array()){
         </div>
 
         <script>
-            $('.tokenize-sample-demo1, .tokenize-disabled-demo').tokenize2();
+            $('.tokenize-sample-demo1, .tokenize-disabled-demo, .tokenize-events-demo').tokenize2();
             $('.tokenize-remote-demo1, .tokenize-remote-modal').tokenize2({
                 dataSource: 'remote.php'
             });
@@ -231,6 +244,11 @@ function select_options($selected = array()){
             });
             $('.tokenize-custom-demo1').tokenize2({
                 tokensAllowCustom: true
+            });
+            $('.tokenize-events-demo').on('tokenize:focus', function(){
+                console.log('focus');
+            }).on('tokenize:deselect', function(){
+                console.log('deselect');
             });
 
             $('.tokenize-callable-demo1').tokenize2({

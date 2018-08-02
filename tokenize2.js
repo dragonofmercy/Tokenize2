@@ -181,7 +181,9 @@
             this.trigger('tokenize:select', [($(e.target)[0] === this.tokensContainer[0])]);
         }, this))
         .focusout($.proxy(function(){
-            this.trigger('tokenize:deselect');
+            if(this.container.hasClass('focus')){
+                this.trigger('tokenize:deselect')
+            }
         }, this));
 
         if(this.options.tokensMaxItems === 1){
@@ -411,7 +413,10 @@
             this.input.focus();
         }
 
-        this.container.addClass('focus');
+        if(!this.container.hasClass('focus')){
+            this.container.addClass('focus');
+            this.trigger('tokenize:focus');
+        }
 
     };
 
