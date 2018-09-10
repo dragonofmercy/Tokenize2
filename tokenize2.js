@@ -327,7 +327,7 @@
             .insertBefore(this.searchContainer);
 
         this.trigger('tokenize:dropdown:hide');
-        this.trigger('tokenize:tokens:added');
+        this.trigger('tokenize:tokens:added', [value, text]);
 
         return this;
 
