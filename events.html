@@ -194,7 +194,7 @@
                             </tr>
                             <tr>
                                 <td>tokenize:tokens:added</td>
-                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_tokens_add">[string, string]</a></td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal_argument" data-whatever="tokenize_tokens_added">[string, string]</a></td>
                                 <td>Fired when token is added</td>
                             </tr>
                             <tr>
@@ -281,6 +281,16 @@ Event('tokenize:keyup', function(e, routedEvent){});</code></pre></figure></div>
  * @param {boolean} force   Must be true if tokensAllowCustom is false
  */
 Event('tokenize:tokens:add', function(e, value, text, force){});</code></pre></figure></div>
+                    </div>
+
+                    <div class="hidden" id="tokenize_tokens_added">
+                        <div class="title">tokenize:tokens:add</div>
+                        <div class="body"><figure class="highlight no-mar"><pre class="prettyprint"><code>/**
+ * @param {event}   e       Not used
+ * @param {string}  value   The token value
+ * @param {string}  text    The token display text
+ */
+Event('tokenize:tokens:add', function(e, value, text){});</code></pre></figure></div>
                     </div>
 
                     <div class="hidden" id="tokenize_tokens_remove">
