@@ -21,6 +21,6 @@
     "license": "BSD",
     "readmeFilename": "README.md",
     "dependencies": {
-        "jquery": "~2.2.4"
+        "jquery": "~3.0.0"
     }
 }

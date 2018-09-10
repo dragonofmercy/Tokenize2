@@ -30,6 +30,6 @@
     ],
     "license": "BSD",
     "dependencies": {
-        "jquery": "2"
+        "jquery": "~3.0.0"
     }
 }
