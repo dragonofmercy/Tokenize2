@@ -244,7 +244,7 @@
         if(this.options.sortable){
             var previous, current;
             $.each(this.tokensContainer.sortable('toArray', {attribute: 'data-value'}), $.proxy(function(k, v){
-                current = $('option[value="' + v + '"]', this.element);
+                current = $('option[value="' + $.escapeSelector(v) + '"]', this.element);
                 if(previous === undefined){
                     current.prependTo(this.element);
                 } else {
@@ -301,13 +301,13 @@
         }
 
         // Check duplicate token
-        if($('li.token[data-value="' + value + '"]', this.tokensContainer).length > 0){
+        if($('li.token[data-value="' + $.escapeSelector(value) + '"]', this.tokensContainer).length > 0){
             this.trigger('tokenize:tokens:error:duplicate', [value, text]);
             return this;
         }
 
-        if($('option[value="' + value + '"]', this.element).length) {
-            $('option[value="' + value + '"]', this.element).attr('selected', 'selected').prop('selected', true);
+        if($('option[value="' + $.escapeSelector(value) + '"]', this.element).length) {
+            $('option[value="' + $.escapeSelector(value) + '"]', this.element).attr('selected', 'selected').prop('selected', true);
         } else if(force){
             this.element.append($('<option selected />').val(value).html(text));
         } else if(this.options.tokensAllowCustom){
@@ -340,8 +340,7 @@
      * @returns {Tokenize2}
      */
     Tokenize2.prototype.tokenRemove = function(v){
-
-        var $item = $('option[value="' + v + '"]', this.element);
+        var $item = $('option[value="' + $.escapeSelector(v) + '"]', this.element);
 
         if($item.attr('data-type') === 'custom'){
             $item.remove();
@@ -349,7 +348,7 @@
             $item.removeAttr('selected').prop('selected', false);
         }
 
-        $('li.token[data-value="' + v + '"]', this.tokensContainer).remove();
+        $('li.token[data-value="' + $.escapeSelector(v) + '"]', this.tokensContainer).remove();
 
         this.trigger('tokenize:tokens:reorder');
         return this;
