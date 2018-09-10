@@ -603,7 +603,11 @@
         if(this.options.dataSource === 'select'){
             this.dataSourceLocal(v);
         } else if(typeof this.options.dataSource === 'function'){
-            this.options.dataSource(v, this);
+            this.debounce($.proxy(function () {
+                
+                this.options.dataSource(v, this);
+
+            }, this), this.options.debounce);
         } else {
             this.dataSourceRemote(v);
         }
