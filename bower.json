@@ -3,7 +3,7 @@
     "version": "1.2",
     "description": "Plugin which allows your users to select multiple items from a predefined list or ajax, using autocompletion as they type to find each item.",
     "author": "DragonOfMercy <dragonofmercy@gmail.com>",
-    "homepage": "http://zellerda.github.io/Tokenize2",
+    "homepage": "http://dragonofmercy.github.io/Tokenize2",
     "bugs": {
         "url": "https://github.com/dragonofmercy/Tokenize2/issues"
     },
