@@ -171,6 +171,7 @@ function select_options($selected = array()){
                     </div>
                     <div class="panel-body">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Open modal</button>
+                        <div style="padding-bottom: 10px"></div>
                     </div>
                 </div>
             </div>
@@ -215,11 +216,11 @@ function select_options($selected = array()){
                         <h4 class="modal-title">Modal title</h4>
                     </div>
                     <div class="modal-body">
-                        <select class="tokenize-remote-modal" multiple></select>
+                        <select class="tokenize-remote-modal" multiple required></select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary" id="btn_validation">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -227,7 +228,7 @@ function select_options($selected = array()){
 
         <script>
             $('.tokenize-sample-demo1, .tokenize-disabled-demo, .tokenize-events-demo').tokenize2();
-            $('.tokenize-remote-demo1, .tokenize-remote-modal').tokenize2({
+            $('.tokenize-remote-demo1').tokenize2({
                 dataSource: 'remote.php'
             });
             $('.tokenize-limit-demo1').tokenize2({
@@ -245,10 +246,8 @@ function select_options($selected = array()){
             $('.tokenize-custom-demo1').tokenize2({
                 tokensAllowCustom: true
             });
-            $('.tokenize-events-demo').on('tokenize:focus', function(){
-                console.log('focus');
-            }).on('tokenize:deselect', function(){
-                console.log('deselect');
+            $('.tokenize-events-demo').on('tokenize:tokens:added', function(e){
+                console.log(e);
             });
 
             $('.tokenize-callable-demo1').tokenize2({
@@ -280,6 +279,16 @@ function select_options($selected = array()){
             $('#btnClear').on('mousedown touchstart', function(e){
                 e.preventDefault();
                 $('.tokenize-demo1, .tokenize-demo2, .tokenize-demo3').tokenize2().trigger('tokenize:clear');
+            });
+
+            $('.tokenize-remote-modal').tokenize2({
+                dataSource: 'remote.php',
+                tokensMaxItems: 1
+            });
+
+            $('#btn_validation').on('click', function(e){
+                e.preventDefault();
+                console.log($('.tokenize-remote-modal').get(0).checkValidity());
             });
         </script>
 

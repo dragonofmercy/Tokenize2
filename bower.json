@@ -2,10 +2,10 @@
     "name": "tokenize2",
     "version": "1.2",
     "description": "Plugin which allows your users to select multiple items from a predefined list or ajax, using autocompletion as they type to find each item.",
-    "author": "David Zeller <dev@zellerda.com>",
+    "author": "DragonOfMercy <dragonofmercy@gmail.com>",
     "homepage": "http://zellerda.github.io/Tokenize2",
     "bugs": {
-        "url": "https://github.com/zellerda/Tokenize2/issues"
+        "url": "https://github.com/dragonofmercy/Tokenize2/issues"
     },
     "main": [
         "/dist/tokenize2.min.js",
@@ -13,7 +13,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/zellerda/Tokenize2.git"
+        "url": "https://github.com/dragonofmercy/Tokenize2.git"
     },
     "ignore": [
         ".gitattribute",

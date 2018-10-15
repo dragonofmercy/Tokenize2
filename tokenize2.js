@@ -1,6 +1,6 @@
 /*!
- * Tokenize2 v1.2 (https://github.com/zellerda/Tokenize2)
- * Copyright 2016-2017 David Zeller.
+ * Tokenize2 v1.2 (https://github.com/dragonofmercy/Tokenize2)
+ * Copyright 2016-2017 DragonOfMercy.
  * Licensed under the new BSD license
  */
 (function(factory){
@@ -29,7 +29,6 @@
         factory(jQuery);
     }
 }(function($){
-
     /**
      * Tokenize2 constructor.
      *
