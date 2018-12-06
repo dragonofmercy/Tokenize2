@@ -55,6 +55,11 @@
     cursor: move;
 }
 
+.tokenize.sortable > .tokens-container > .token.dragged {
+    position: absolute;
+    z-index: 2000;
+}
+
 .tokenize.single > .tokens-container > .token {
     display: block;
     border-color: #fff;
