@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v1.2 (https://github.com/dragonofmercy/Tokenize2)
+ * Tokenize2 v1.3 (https://github.com/dragonofmercy/Tokenize2)
  * Copyright 2016-2017 DragonOfMercy.
  * Licensed under the new BSD license
  */
@@ -66,7 +66,7 @@
         MAJ: 16
     };
 
-    Tokenize2.VERSION = '1.2';
+    Tokenize2.VERSION = '1.3';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
