@@ -315,7 +315,9 @@
             .append('<span>' + text + '</span>')
             .prepend($('<a class="dismiss" />').on('mousedown touchstart', {}, $.proxy(function(e){
                 e.preventDefault();
-                this.trigger('tokenize:tokens:remove', [value]);
+                if(e.which == 1){
+                    this.trigger('tokenize:tokens:remove', [value]);
+                }
             }, this)))
             .insertBefore(this.searchContainer);
 
