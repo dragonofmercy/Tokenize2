@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v1.3 (https://github.com/dragonofmercy/Tokenize2)
+ * Tokenize2 v1.3.1 (https://github.com/dragonofmercy/Tokenize2)
  * Copyright 2016-2017 DragonOfMercy.
  * Licensed under the new BSD license
  */
@@ -73,6 +73,7 @@
         tokensAllowCustom: false,
         dropdownMaxItems: 10,
         searchMinLength: 0,
+        searchMaxLength: 0,
         searchFromStart: true,
         searchHighlight: true,
         displayNoResultsMessage: false,
@@ -156,6 +157,10 @@
                     }, this), 10);
                 }
             }, this));
+
+        if(this.options.searchMaxLength > 0){
+            this.input.attr('maxlength', this.options.searchMaxLength);
+        }
 
         this.tokensContainer = $('<ul class="tokens-container form-control" />')
             .addClass(this.element.attr('data-class'))
