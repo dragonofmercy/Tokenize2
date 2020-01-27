@@ -66,7 +66,7 @@
         MAJ: 16
     };
 
-    Tokenize2.VERSION = '1.3';
+    Tokenize2.VERSION = '1.3.2';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
@@ -623,12 +623,15 @@
             }
             this.xhr = $.ajax(this.options.dataSource, {
                 data: { search: search },
-                dataType: 'json',
+                dataType: 'text',
                 success: $.proxy(function(data){
                     var $items = [];
-                    $.each(data, function(k, v){
-                        $items.push(v);
-                    });
+                    if(data != ''){
+                        data = JSON.parse(data);
+                        $.each(data, function(k, v){
+                            $items.push(v);
+                        });
+                    }
                     this.trigger('tokenize:dropdown:fill', [$items]);
                 }, this)
             });
