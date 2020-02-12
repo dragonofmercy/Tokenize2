@@ -66,12 +66,13 @@
         MAJ: 16
     };
 
-    Tokenize2.VERSION = '1.3.2';
+    Tokenize2.VERSION = '1.3.3';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
         tokensAllowCustom: false,
         dropdownMaxItems: 10,
+        dropdownSelectFirstItem: true,
         searchMinLength: 0,
         searchMaxLength: 0,
         searchFromStart: true,
@@ -777,7 +778,7 @@
                 }
             }, this));
 
-            if($('li.active', this.dropdown).length < 1){
+            if($('li.active', this.dropdown).length < 1 && this.options.dropdownSelectFirstItem){
                 $('li:first', this.dropdown).addClass('active');
             }
 
@@ -820,7 +821,9 @@
                 }
             } else {
                 $('li.active', this.dropdown).removeClass('active');
-                $('li:' + (d > 0 ? 'first-child' : 'last-child'), this.dropdown).addClass('active');
+                if(this.options.dropdownSelectFirstItem){
+                    $('li:' + (d > 0 ? 'first-child' : 'last-child'), this.dropdown).addClass('active');
+                }
             }
         } else {
             $('li:first', this.dropdown).addClass('active');
