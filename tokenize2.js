@@ -656,8 +656,10 @@
         $('option', this.element)
             .not(':selected, :disabled')
             .each(function(){
-                if($regexp.test($this.transliteration($(this).html()))){
-                    $items.push({ value: $(this).attr('value'), text: $(this).html() });
+                var text = $this.trim($(this).html());
+                var value = $this.trim($(this).attr('value'));
+                if($regexp.test($this.transliteration(text))){
+                    $items.push({ value: value, text: text });
                 }
             });
 
@@ -1009,6 +1011,10 @@
         this.input.val('');
         this.scaleInput();
 
+    };
+
+    Tokenize2.prototype.trim = function(string){
+        return string.trim();
     };
 
     /**
