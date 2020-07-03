@@ -86,7 +86,8 @@
         sortable: false,
         allowEmptyValues: false,
         zIndexMargin: 500,
-        tabIndex: 0
+        tabIndex: 0,
+        cacheTransliteration: false
     };
 
     /**
@@ -112,6 +113,7 @@
             .on('tokenize:deselect', {}, $.proxy(function(){ this.blur() }, this))
             .on('tokenize:search', {}, $.proxy(function(e, v){ this.find(v) }, this))
             .on('tokenize:paste', {}, $.proxy(function(){ this.paste() }, this))
+            .on('tokenize:transliterate', {}, $.proxy(function(){ this.populateTransliterationCache() }, this))
             .on('tokenize:dropdown:up', {}, $.proxy(function(){ this.dropdownSelectionMove(-1) }, this))
             .on('tokenize:dropdown:down', {}, $.proxy(function(){ this.dropdownSelectionMove(1) }, this))
             .on('tokenize:dropdown:clear', {}, $.proxy(function(){ this.dropdownClear() }, this))
@@ -135,6 +137,7 @@
 
         this.id = this.guid();
         this.element.hide();
+
 
         if(!this.element.attr('multiple')){
             console.error('Attribute multiple is missing, tokenize2 can be buggy !')
@@ -185,11 +188,11 @@
         this.container.focusin($.proxy(function(e){
             this.trigger('tokenize:select', [($(e.target)[0] === this.tokensContainer[0])]);
         }, this))
-        .focusout($.proxy(function(){
-            if(this.container.hasClass('focus')){
-                this.trigger('tokenize:deselect')
-            }
-        }, this));
+            .focusout($.proxy(function(){
+                if(this.container.hasClass('focus')){
+                    this.trigger('tokenize:deselect')
+                }
+            }, this));
 
         if(this.options.tokensMaxItems === 1){
             this.container.addClass('single');
@@ -229,6 +232,11 @@
         this.trigger('tokenize:remap');
         this.trigger('tokenize:tokens:reorder');
         this.trigger('tokenize:loaded');
+
+        this.transliterationCache = null;
+        if (this.options.cacheTransliteration){
+            this.trigger('tokenize:transliterate');
+        }
 
         if(this.element.is(':disabled')){
             this.disable();
@@ -653,18 +661,47 @@
         var $regexp = new RegExp($pattern, 'i');
         var $this = this;
 
-        $('option', this.element)
-            .not(':selected, :disabled')
-            .each(function(){
-                var text = $this.trim($(this).html());
-                var value = $this.trim($(this).attr('value'));
-                if($regexp.test($this.transliteration(text))){
-                    $items.push({ value: value, text: text });
-                }
-            });
+        if(this.transliterationCache !== null) {
+            $('option', this.element)
+                .not(':selected, :disabled')
+                .each(function(){
+                    var origText = $this.trim($(this).html());
+                    var value = $this.trim($(this).attr('value'));
+                    var text = $this.transliterationCache[origText];
+                    if (!text) {
+                        text = $this.transliteration(origText);
+                        $this.transliterationCache[origText] = text;
+                    }
+                    if($regexp.test(text)){
+                        $items.push({ value: value, text: origText });
+                    }
+                });
+        } else {
+            $('option', this.element)
+                .not(':selected, :disabled')
+                .each(function(){
+                    var text = $this.trim($(this).html());
+                    var value = $this.trim($(this).attr('value'));
+                    if($regexp.test($this.transliteration(text))){
+                        $items.push({ value: value, text: text });
+                    }
+                });
+        }
 
         this.trigger('tokenize:dropdown:fill', [$items]);
 
+    };
+
+    Tokenize2.prototype.populateTransliterationCache = function(){
+        var $this = this;
+        this.transliterationCache = {};
+
+        $('option', this.element)
+            .not(':selected, :disabled')
+            .each(function(){
+                let text = $this.trim($(this).html());
+                $this.transliterationCache[text] = $this.transliteration(text);
+            });
     };
 
     /**
@@ -991,7 +1028,7 @@
         $tokensContainerWidth = this.tokensContainer.width() -
             (
                 Math.ceil(parseFloat(this.tokensContainer.css('border-left-width'))) + Math.ceil(parseFloat(this.tokensContainer.css('border-right-width')) +
-                Math.ceil(parseFloat(this.tokensContainer.css('padding-left'))) + Math.ceil(parseFloat(this.tokensContainer.css('padding-right'))))
+                    Math.ceil(parseFloat(this.tokensContainer.css('padding-left'))) + Math.ceil(parseFloat(this.tokensContainer.css('padding-right'))))
             );
 
         if($width >= $tokensContainerWidth){
