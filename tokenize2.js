@@ -86,7 +86,8 @@
         sortable: false,
         allowEmptyValues: false,
         zIndexMargin: 500,
-        tabIndex: 0
+        tabIndex: 0,
+        cacheTransliteration: false
     };
 
     /**
@@ -106,25 +107,26 @@
     Tokenize2.prototype.bind = function(){
 
         this.element.on('tokenize:load', {}, $.proxy(function(){ this.init() }, this))
-            .on('tokenize:clear', {}, $.proxy(function(){ this.clear() }, this))
-            .on('tokenize:remap', {}, $.proxy(function(){ this.remap() }, this))
-            .on('tokenize:select', {}, $.proxy(function(e, c){ this.focus(c) }, this))
-            .on('tokenize:deselect', {}, $.proxy(function(){ this.blur() }, this))
-            .on('tokenize:search', {}, $.proxy(function(e, v){ this.find(v) }, this))
-            .on('tokenize:paste', {}, $.proxy(function(){ this.paste() }, this))
-            .on('tokenize:dropdown:up', {}, $.proxy(function(){ this.dropdownSelectionMove(-1) }, this))
-            .on('tokenize:dropdown:down', {}, $.proxy(function(){ this.dropdownSelectionMove(1) }, this))
-            .on('tokenize:dropdown:clear', {}, $.proxy(function(){ this.dropdownClear() }, this))
-            .on('tokenize:dropdown:show', {}, $.proxy(function(){ this.dropdownShow() }, this))
-            .on('tokenize:dropdown:hide', {}, $.proxy(function(){ this.dropdownHide() }, this))
-            .on('tokenize:dropdown:fill', {}, $.proxy(function(e, i){ this.dropdownFill(i) }, this))
-            .on('tokenize:dropdown:itemAdd', {}, $.proxy(function(e, i){ this.dropdownAddItem(i) }, this))
-            .on('tokenize:keypress', {}, $.proxy(function(e, routedEvent){ this.keypress(routedEvent) }, this))
-            .on('tokenize:keydown', {}, $.proxy(function(e, routedEvent){ this.keydown(routedEvent) }, this))
-            .on('tokenize:keyup', {}, $.proxy(function(e, routedEvent){ this.keyup(routedEvent) }, this))
-            .on('tokenize:tokens:reorder', {}, $.proxy(function(){ this.reorder() }, this))
-            .on('tokenize:tokens:add', {}, $.proxy(function(e, v, t, c){ this.tokenAdd(v, t, c) }, this))
-            .on('tokenize:tokens:remove', {}, $.proxy(function(e, v){ this.tokenRemove(v) }, this));
+          .on('tokenize:clear', {}, $.proxy(function(){ this.clear() }, this))
+          .on('tokenize:remap', {}, $.proxy(function(){ this.remap() }, this))
+          .on('tokenize:select', {}, $.proxy(function(e, c){ this.focus(c) }, this))
+          .on('tokenize:deselect', {}, $.proxy(function(){ this.blur() }, this))
+          .on('tokenize:search', {}, $.proxy(function(e, v){ this.find(v) }, this))
+          .on('tokenize:paste', {}, $.proxy(function(){ this.paste() }, this))
+          .on('tokenize:transliterate', {}, $.proxy(function(){ this.populateTransliterationCache() }, this))
+          .on('tokenize:dropdown:up', {}, $.proxy(function(){ this.dropdownSelectionMove(-1) }, this))
+          .on('tokenize:dropdown:down', {}, $.proxy(function(){ this.dropdownSelectionMove(1) }, this))
+          .on('tokenize:dropdown:clear', {}, $.proxy(function(){ this.dropdownClear() }, this))
+          .on('tokenize:dropdown:show', {}, $.proxy(function(){ this.dropdownShow() }, this))
+          .on('tokenize:dropdown:hide', {}, $.proxy(function(){ this.dropdownHide() }, this))
+          .on('tokenize:dropdown:fill', {}, $.proxy(function(e, i){ this.dropdownFill(i) }, this))
+          .on('tokenize:dropdown:itemAdd', {}, $.proxy(function(e, i){ this.dropdownAddItem(i) }, this))
+          .on('tokenize:keypress', {}, $.proxy(function(e, routedEvent){ this.keypress(routedEvent) }, this))
+          .on('tokenize:keydown', {}, $.proxy(function(e, routedEvent){ this.keydown(routedEvent) }, this))
+          .on('tokenize:keyup', {}, $.proxy(function(e, routedEvent){ this.keyup(routedEvent) }, this))
+          .on('tokenize:tokens:reorder', {}, $.proxy(function(){ this.reorder() }, this))
+          .on('tokenize:tokens:add', {}, $.proxy(function(e, v, t, c){ this.tokenAdd(v, t, c) }, this))
+          .on('tokenize:tokens:remove', {}, $.proxy(function(e, v){ this.tokenRemove(v) }, this));
 
     };
 
@@ -136,6 +138,7 @@
         this.id = this.guid();
         this.element.hide();
 
+
         if(!this.element.attr('multiple')){
             console.error('Attribute multiple is missing, tokenize2 can be buggy !')
         }
@@ -143,30 +146,30 @@
         this.dropdown = undefined;
         this.searchContainer = $('<li class="token-search" />');
         this.input = $('<input autocomplete="off" />')
-            .on('keydown', {}, $.proxy(function(e){ this.trigger('tokenize:keydown', [e]) }, this))
-            .on('keypress', {}, $.proxy(function(e){ this.trigger('tokenize:keypress', [e]) }, this))
-            .on('keyup', {}, $.proxy(function(e){ this.trigger('tokenize:keyup', [e]) }, this))
-            .on('focus', {}, $.proxy(function(){
-                if(this.input.val().length >= this.options.searchMinLength && this.input.val().length > 0){
-                    this.trigger('tokenize:search', [this.input.val()]);
-                }
-            }, this))
-            .on('paste', {}, $.proxy(function(){
-                if(this.options.tokensAllowCustom){
-                    setTimeout($.proxy(function(){
-                        this.trigger('tokenize:paste');
-                    }, this), 10);
-                }
-            }, this));
+          .on('keydown', {}, $.proxy(function(e){ this.trigger('tokenize:keydown', [e]) }, this))
+          .on('keypress', {}, $.proxy(function(e){ this.trigger('tokenize:keypress', [e]) }, this))
+          .on('keyup', {}, $.proxy(function(e){ this.trigger('tokenize:keyup', [e]) }, this))
+          .on('focus', {}, $.proxy(function(){
+              if(this.input.val().length >= this.options.searchMinLength && this.input.val().length > 0){
+                  this.trigger('tokenize:search', [this.input.val()]);
+              }
+          }, this))
+          .on('paste', {}, $.proxy(function(){
+              if(this.options.tokensAllowCustom){
+                  setTimeout($.proxy(function(){
+                      this.trigger('tokenize:paste');
+                  }, this), 10);
+              }
+          }, this));
 
         if(this.options.searchMaxLength > 0){
             this.input.attr('maxlength', this.options.searchMaxLength);
         }
 
         this.tokensContainer = $('<ul class="tokens-container form-control" />')
-            .addClass(this.element.attr('data-class'))
-            .attr('tabindex', this.options.tabIndex)
-            .append(this.searchContainer.append(this.input));
+          .addClass(this.element.attr('data-class'))
+          .attr('tabindex', this.options.tabIndex)
+          .append(this.searchContainer.append(this.input));
 
         if(this.options.placeholder !== false){
             this.placeholder = $('<li class="placeholder" />').html(this.options.placeholder);
@@ -185,11 +188,11 @@
         this.container.focusin($.proxy(function(e){
             this.trigger('tokenize:select', [($(e.target)[0] === this.tokensContainer[0])]);
         }, this))
-        .focusout($.proxy(function(){
-            if(this.container.hasClass('focus')){
-                this.trigger('tokenize:deselect')
-            }
-        }, this));
+          .focusout($.proxy(function(){
+              if(this.container.hasClass('focus')){
+                  this.trigger('tokenize:deselect')
+              }
+          }, this));
 
         if(this.options.tokensMaxItems === 1){
             this.container.addClass('single');
@@ -215,20 +218,25 @@
         }
 
         this.element
-            .on('tokenize:tokens:add tokenize:tokens:remove', $.proxy(function(){
-                if(this.options.tokensMaxItems > 0 && $('li.token', this.tokensContainer).length >= this.options.tokensMaxItems){
-                    this.searchContainer.hide();
-                } else {
-                    this.searchContainer.show();
-                }
-            }, this))
-            .on('tokenize:keydown tokenize:keyup tokenize:loaded', $.proxy(function(){
-                this.scaleInput();
-            }, this));
+          .on('tokenize:tokens:add tokenize:tokens:remove', $.proxy(function(){
+              if(this.options.tokensMaxItems > 0 && $('li.token', this.tokensContainer).length >= this.options.tokensMaxItems){
+                  this.searchContainer.hide();
+              } else {
+                  this.searchContainer.show();
+              }
+          }, this))
+          .on('tokenize:keydown tokenize:keyup tokenize:loaded', $.proxy(function(){
+              this.scaleInput();
+          }, this));
 
         this.trigger('tokenize:remap');
         this.trigger('tokenize:tokens:reorder');
         this.trigger('tokenize:loaded');
+
+        this.transliterationCache = null;
+        if (this.options.cacheTransliteration){
+            this.trigger('tokenize:transliterate');
+        }
 
         if(this.element.is(':disabled')){
             this.disable();
@@ -317,15 +325,15 @@
         }
 
         $('<li class="token" />')
-            .attr('data-value', value)
-            .append('<span>' + text + '</span>')
-            .prepend($('<a class="dismiss" />').on('mousedown touchstart', {}, $.proxy(function(e){
-                e.preventDefault();
-                if(e.which == 1){
-                    this.trigger('tokenize:tokens:remove', [value]);
-                }
-            }, this)))
-            .insertBefore(this.searchContainer);
+          .attr('data-value', value)
+          .append('<span>' + text + '</span>')
+          .prepend($('<a class="dismiss" />').on('mousedown touchstart', {}, $.proxy(function(e){
+              e.preventDefault();
+              if(e.which == 1){
+                  this.trigger('tokenize:tokens:remove', [value]);
+              }
+          }, this)))
+          .insertBefore(this.searchContainer);
 
         this.trigger('tokenize:dropdown:hide');
         this.trigger('tokenize:tokens:added', [value, text]);
@@ -653,18 +661,47 @@
         var $regexp = new RegExp($pattern, 'i');
         var $this = this;
 
-        $('option', this.element)
-            .not(':selected, :disabled')
-            .each(function(){
-                var text = $this.trim($(this).html());
-                var value = $this.trim($(this).attr('value'));
-                if($regexp.test($this.transliteration(text))){
-                    $items.push({ value: value, text: text });
-                }
-            });
+        if(this.transliterationCache !== null) {
+            $('option', this.element)
+              .not(':selected, :disabled')
+              .each(function(){
+                  var origText = $this.trim($(this).html());
+                  var value = $this.trim($(this).attr('value'));
+                  var text = $this.transliterationCache[origText];
+                  if (!text) {
+                      text = $this.transliteration(origText);
+                      $this.transliterationCache[origText] = text;
+                  }
+                  if($regexp.test(text)){
+                      $items.push({ value: value, text: origText });
+                  }
+              });
+        } else {
+            $('option', this.element)
+              .not(':selected, :disabled')
+              .each(function(){
+                  var text = $this.trim($(this).html());
+                  var value = $this.trim($(this).attr('value'));
+                  if($regexp.test($this.transliteration(text))){
+                      $items.push({ value: value, text: text });
+                  }
+              });
+        }
 
         this.trigger('tokenize:dropdown:fill', [$items]);
 
+    };
+
+    Tokenize2.prototype.populateTransliterationCache = function(){
+        var $this = this;
+        this.transliterationCache = {};
+
+        $('option', this.element)
+          .not(':selected, :disabled')
+          .each(function(){
+              let text = $this.trim($(this).html());
+              $this.transliterationCache[text] = $this.transliteration(text);
+          });
     };
 
     /**
@@ -794,7 +831,7 @@
                 this.trigger('tokenize:dropdown:show');
                 this.trigger('tokenize:dropdown:clear');
                 this.dropdown.find('.dropdown-menu').append(
-                    $('<li class="dropdown-item locked" />').html(this.options.noResultsMessageText.replace('%s', this.input.val()))
+                  $('<li class="dropdown-item locked" />').html(this.options.noResultsMessageText.replace('%s', this.input.val()))
                 );
             } else {
                 this.trigger('tokenize:dropdown:hide');
@@ -842,18 +879,18 @@
 
         if(this.isDropdownOpen()){
             var $li = $('<li class="dropdown-item" />').html(this.dropdownItemFormat(item))
-                .on('mouseover', $.proxy(function(e){
-                    e.preventDefault();
-                    e.target = this.fixTarget(e.target);
-                    $('li', this.dropdown).removeClass('active');
-                    $(e.target).parent().addClass('active');
-                }, this)).on('mouseout', $.proxy(function(){
-                    $('li', this.dropdown).removeClass('active');
-                }, this)).on('mousedown touchstart', $.proxy(function(e){
-                    e.preventDefault();
-                    e.target = this.fixTarget(e.target);
-                    this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text'), true]);
-                }, this));
+              .on('mouseover', $.proxy(function(e){
+                  e.preventDefault();
+                  e.target = this.fixTarget(e.target);
+                  $('li', this.dropdown).removeClass('active');
+                  $(e.target).parent().addClass('active');
+              }, this)).on('mouseout', $.proxy(function(){
+                  $('li', this.dropdown).removeClass('active');
+              }, this)).on('mousedown touchstart', $.proxy(function(e){
+                  e.preventDefault();
+                  e.target = this.fixTarget(e.target);
+                  this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text'), true]);
+              }, this));
             if($('li.token[data-value="' + $li.find('a').attr('data-value') + '"]', this.tokensContainer).length < 1){
                 this.dropdown.find('.dropdown-menu').append($li);
                 this.trigger('tokenize:dropdown:itemAdded', [item]);
@@ -982,17 +1019,17 @@
         var $width, $tokensContainerWidth;
 
         this.ctx.font = this.input.css('font-style') + ' ' +
-            this.input.css('font-variant') + ' ' +
-            this.input.css('font-weight') + ' ' +
-            Math.ceil(parseFloat(this.input.css('font-size'))) + 'px ' +
-            this.input.css('font-family');
+          this.input.css('font-variant') + ' ' +
+          this.input.css('font-weight') + ' ' +
+          Math.ceil(parseFloat(this.input.css('font-size'))) + 'px ' +
+          this.input.css('font-family');
 
         $width = Math.round(this.ctx.measureText(this.input.val() + 'M').width) + Math.ceil(parseFloat(this.searchContainer.css('margin-left'))) + Math.ceil(parseFloat(this.searchContainer.css('margin-right')));
         $tokensContainerWidth = this.tokensContainer.width() -
-            (
-                Math.ceil(parseFloat(this.tokensContainer.css('border-left-width'))) + Math.ceil(parseFloat(this.tokensContainer.css('border-right-width')) +
-                Math.ceil(parseFloat(this.tokensContainer.css('padding-left'))) + Math.ceil(parseFloat(this.tokensContainer.css('padding-right'))))
-            );
+          (
+            Math.ceil(parseFloat(this.tokensContainer.css('border-left-width'))) + Math.ceil(parseFloat(this.tokensContainer.css('border-right-width')) +
+              Math.ceil(parseFloat(this.tokensContainer.css('padding-left'))) + Math.ceil(parseFloat(this.tokensContainer.css('padding-right'))))
+          );
 
         if($width >= $tokensContainerWidth){
             $width = $tokensContainerWidth;
@@ -1055,11 +1092,11 @@
 
         function s4(){
             return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
+              .toString(16)
+              .substring(1);
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
+          s4() + '-' + s4() + s4() + s4();
 
     };
 
@@ -1999,133 +2036,133 @@
 
 !function ( $, window, pluginName, undefined){
     var containerDefaults = {
-            // If true, items can be dragged from this container
-            drag: true,
-            // If true, items can be droped onto this container
-            drop: true,
-            // Exclude items from being draggable, if the
-            // selector matches the item
-            exclude: "",
-            // If true, search for nested containers within an item.If you nest containers,
-            // either the original selector with which you call the plugin must only match the top containers,
-            // or you need to specify a group (see the bootstrap nav example)
-            nested: true,
-            // If true, the items are assumed to be arranged vertically
-            vertical: true
-        }, // end container defaults
-        groupDefaults = {
-            // This is executed after the placeholder has been moved.
-            // $closestItemOrContainer contains the closest item, the placeholder
-            // has been put at or the closest empty Container, the placeholder has
-            // been appended to.
-            afterMove: function ($placeholder, container, $closestItemOrContainer) {
-            },
-            // The exact css path between the container and its items, e.g. "> tbody"
-            containerPath: "",
-            // The css selector of the containers
-            containerSelector: "ol, ul",
-            // Distance the mouse has to travel to start dragging
-            distance: 0,
-            // Time in milliseconds after mousedown until dragging should start.
-            // This option can be used to prevent unwanted drags when clicking on an element.
-            delay: 0,
-            // The css selector of the drag handle
-            handle: "",
-            // The exact css path between the item and its subcontainers.
-            // It should only match the immediate items of a container.
-            // No item of a subcontainer should be matched. E.g. for ol>div>li the itemPath is "> div"
-            itemPath: "",
-            // The css selector of the items
-            itemSelector: "li",
-            // The class given to "body" while an item is being dragged
-            bodyClass: "dragging",
-            // The class giving to an item while being dragged
-            draggedClass: "dragged",
-            // Check if the dragged item may be inside the container.
-            // Use with care, since the search for a valid container entails a depth first search
-            // and may be quite expensive.
-            isValidTarget: function ($item, container) {
-                return true
-            },
-            // Executed before onDrop if placeholder is detached.
-            // This happens if pullPlaceholder is set to false and the drop occurs outside a container.
-            onCancel: function ($item, container, _super, event) {
-            },
-            // Executed at the beginning of a mouse move event.
-            // The Placeholder has not been moved yet.
-            onDrag: function ($item, position, _super, event) {
-                $item.css(position)
-            },
-            // Called after the drag has been started,
-            // that is the mouse button is being held down and
-            // the mouse is moving.
-            // The container is the closest initialized container.
-            // Therefore it might not be the container, that actually contains the item.
-            onDragStart: function ($item, container, _super, event) {
-                $item.css({
-                    height: $item.outerHeight(),
-                    width: $item.outerWidth()
-                })
-                $item.addClass(container.group.options.draggedClass)
-                $("body").addClass(container.group.options.bodyClass)
-            },
-            // Called when the mouse button is being released
-            onDrop: function ($item, container, _super, event) {
-                $item.removeClass(container.group.options.draggedClass).removeAttr("style")
-                $("body").removeClass(container.group.options.bodyClass)
-            },
-            // Called on mousedown. If falsy value is returned, the dragging will not start.
-            // Ignore if element clicked is input, select or textarea
-            onMousedown: function ($item, _super, event) {
-                if (!event.target.nodeName.match(/^(input|select|textarea)$/i)) {
-                    event.preventDefault()
-                    return true
-                }
-            },
-            // The class of the placeholder (must match placeholder option markup)
-            placeholderClass: "placeholder",
-            // Template for the placeholder. Can be any valid jQuery input
-            // e.g. a string, a DOM element.
-            // The placeholder must have the class "placeholder"
-            placeholder: '<li class="placeholder"></li>',
-            // If true, the position of the placeholder is calculated on every mousemove.
-            // If false, it is only calculated when the mouse is above a container.
-            pullPlaceholder: true,
-            // Specifies serialization of the container group.
-            // The pair $parent/$children is either container/items or item/subcontainers.
-            serialize: function ($parent, $children, parentIsContainer) {
-                var result = $.extend({}, $parent.data())
+          // If true, items can be dragged from this container
+          drag: true,
+          // If true, items can be droped onto this container
+          drop: true,
+          // Exclude items from being draggable, if the
+          // selector matches the item
+          exclude: "",
+          // If true, search for nested containers within an item.If you nest containers,
+          // either the original selector with which you call the plugin must only match the top containers,
+          // or you need to specify a group (see the bootstrap nav example)
+          nested: true,
+          // If true, the items are assumed to be arranged vertically
+          vertical: true
+      }, // end container defaults
+      groupDefaults = {
+          // This is executed after the placeholder has been moved.
+          // $closestItemOrContainer contains the closest item, the placeholder
+          // has been put at or the closest empty Container, the placeholder has
+          // been appended to.
+          afterMove: function ($placeholder, container, $closestItemOrContainer) {
+          },
+          // The exact css path between the container and its items, e.g. "> tbody"
+          containerPath: "",
+          // The css selector of the containers
+          containerSelector: "ol, ul",
+          // Distance the mouse has to travel to start dragging
+          distance: 0,
+          // Time in milliseconds after mousedown until dragging should start.
+          // This option can be used to prevent unwanted drags when clicking on an element.
+          delay: 0,
+          // The css selector of the drag handle
+          handle: "",
+          // The exact css path between the item and its subcontainers.
+          // It should only match the immediate items of a container.
+          // No item of a subcontainer should be matched. E.g. for ol>div>li the itemPath is "> div"
+          itemPath: "",
+          // The css selector of the items
+          itemSelector: "li",
+          // The class given to "body" while an item is being dragged
+          bodyClass: "dragging",
+          // The class giving to an item while being dragged
+          draggedClass: "dragged",
+          // Check if the dragged item may be inside the container.
+          // Use with care, since the search for a valid container entails a depth first search
+          // and may be quite expensive.
+          isValidTarget: function ($item, container) {
+              return true
+          },
+          // Executed before onDrop if placeholder is detached.
+          // This happens if pullPlaceholder is set to false and the drop occurs outside a container.
+          onCancel: function ($item, container, _super, event) {
+          },
+          // Executed at the beginning of a mouse move event.
+          // The Placeholder has not been moved yet.
+          onDrag: function ($item, position, _super, event) {
+              $item.css(position)
+          },
+          // Called after the drag has been started,
+          // that is the mouse button is being held down and
+          // the mouse is moving.
+          // The container is the closest initialized container.
+          // Therefore it might not be the container, that actually contains the item.
+          onDragStart: function ($item, container, _super, event) {
+              $item.css({
+                  height: $item.outerHeight(),
+                  width: $item.outerWidth()
+              })
+              $item.addClass(container.group.options.draggedClass)
+              $("body").addClass(container.group.options.bodyClass)
+          },
+          // Called when the mouse button is being released
+          onDrop: function ($item, container, _super, event) {
+              $item.removeClass(container.group.options.draggedClass).removeAttr("style")
+              $("body").removeClass(container.group.options.bodyClass)
+          },
+          // Called on mousedown. If falsy value is returned, the dragging will not start.
+          // Ignore if element clicked is input, select or textarea
+          onMousedown: function ($item, _super, event) {
+              if (!event.target.nodeName.match(/^(input|select|textarea)$/i)) {
+                  event.preventDefault()
+                  return true
+              }
+          },
+          // The class of the placeholder (must match placeholder option markup)
+          placeholderClass: "placeholder",
+          // Template for the placeholder. Can be any valid jQuery input
+          // e.g. a string, a DOM element.
+          // The placeholder must have the class "placeholder"
+          placeholder: '<li class="placeholder"></li>',
+          // If true, the position of the placeholder is calculated on every mousemove.
+          // If false, it is only calculated when the mouse is above a container.
+          pullPlaceholder: true,
+          // Specifies serialization of the container group.
+          // The pair $parent/$children is either container/items or item/subcontainers.
+          serialize: function ($parent, $children, parentIsContainer) {
+              var result = $.extend({}, $parent.data())
 
-                if(parentIsContainer)
-                    return [$children]
-                else if ($children[0]){
-                    result.children = $children
-                }
+              if(parentIsContainer)
+                  return [$children]
+              else if ($children[0]){
+                  result.children = $children
+              }
 
-                delete result.subContainers
-                delete result.sortable
+              delete result.subContainers
+              delete result.sortable
 
-                return result
-            },
-            // Set tolerance while dragging. Positive values decrease sensitivity,
-            // negative values increase it.
-            tolerance: 0
-        }, // end group defaults
-        containerGroups = {},
-        groupCounter = 0,
-        emptyBox = {
-            left: 0,
-            top: 0,
-            bottom: 0,
-            right:0
-        },
-        eventNames = {
-            start: "touchstart.sortable mousedown.sortable",
-            drop: "touchend.sortable touchcancel.sortable mouseup.sortable",
-            drag: "touchmove.sortable mousemove.sortable",
-            scroll: "scroll.sortable"
-        },
-        subContainerKey = "subContainers"
+              return result
+          },
+          // Set tolerance while dragging. Positive values decrease sensitivity,
+          // negative values increase it.
+          tolerance: 0
+      }, // end group defaults
+      containerGroups = {},
+      groupCounter = 0,
+      emptyBox = {
+          left: 0,
+          top: 0,
+          bottom: 0,
+          right:0
+      },
+      eventNames = {
+          start: "touchstart.sortable mousedown.sortable",
+          drop: "touchend.sortable touchcancel.sortable mouseup.sortable",
+          drag: "touchmove.sortable mousemove.sortable",
+          scroll: "scroll.sortable"
+      },
+      subContainerKey = "subContainers"
 
     /*
      * a is Array [left, right, top, bottom]
@@ -2133,19 +2170,19 @@
      */
     function d(a,b) {
         var x = Math.max(0, a[0] - b[0], b[0] - a[1]),
-            y = Math.max(0, a[2] - b[1], b[1] - a[3])
+          y = Math.max(0, a[2] - b[1], b[1] - a[3])
         return x+y;
     }
 
     function setDimensions(array, dimensions, tolerance, useOffset) {
         var i = array.length,
-            offsetMethod = useOffset ? "offset" : "position"
+          offsetMethod = useOffset ? "offset" : "position"
         tolerance = tolerance || 0
 
         while(i--){
             var el = array[i].el ? array[i].el : $(array[i]),
-                // use fitting method
-                pos = el[offsetMethod]()
+              // use fitting method
+              pos = el[offsetMethod]()
             pos.left += parseInt(el.css('margin-left'), 10)
             pos.top += parseInt(el.css('margin-top'),10)
             dimensions[i] = [
@@ -2170,8 +2207,8 @@
         lastPointer = lastPointer && [lastPointer.left, lastPointer.top]
 
         var dim,
-            i = dimensions.length,
-            distances = []
+          i = dimensions.length,
+          distances = []
 
         while(i--){
             dim = dimensions[i]
@@ -2244,13 +2281,13 @@
             this.setPointer(e)
             // place item under the cursor
             this.options.onDrag(this.item,
-                getRelativePosition(this.pointer, this.item.offsetParent()),
-                groupDefaults.onDrag,
-                e)
+              getRelativePosition(this.pointer, this.item.offsetParent()),
+              groupDefaults.onDrag,
+              e)
 
             var p = this.getPointer(e),
-                box = this.sameResultBox,
-                t = this.options.tolerance
+              box = this.sameResultBox,
+              t = this.options.tolerance
 
             if(!box || box.top - t > p.top || box.bottom + t < p.top || box.left - t > p.left || box.right + t < p.left)
                 if(!this.searchValidTarget()){
@@ -2286,13 +2323,13 @@
             }
 
             var distances = sortByDistanceDesc(this.getContainerDimensions(),
-                pointer,
-                lastPointer),
-                i = distances.length
+              pointer,
+              lastPointer),
+              i = distances.length
 
             while(i--){
                 var index = distances[i][0],
-                    distance = distances[i][1]
+                  distance = distances[i][1]
 
                 if(!distance || this.options.pullPlaceholder){
                     var container = this.containers[index]
@@ -2331,7 +2368,7 @@
         $getOffsetParent: function  () {
             if(this.offsetParent === undefined){
                 var i = this.containers.length - 1,
-                    offsetParent = this.containers[i].getItemOffsetParent()
+                  offsetParent = this.containers[i].getItemOffsetParent()
 
                 if(!this.options.rootGroup){
                     while(i--){
@@ -2365,8 +2402,8 @@
         distanceMet: function (e) {
             var currentPointer = this.getPointer(e)
             return (Math.max(
-                Math.abs(this.pointer.left - currentPointer.left),
-                Math.abs(this.pointer.top - currentPointer.top)
+              Math.abs(this.pointer.left - currentPointer.left),
+              Math.abs(this.pointer.top - currentPointer.top)
             ) >= this.options.distance)
         },
         getPointer: function(e) {
@@ -2394,7 +2431,7 @@
         },
         toggleListeners: function (method) {
             var that = this,
-                events = ['drag','drop','scroll']
+              events = ['drag','drop','scroll']
 
             $.each(events,function  (i,event) {
                 that.$document[method](eventNames[event], that[event + 'Proxy'])
@@ -2446,24 +2483,24 @@
             var rootGroup = this.rootGroup
 
             if( !this.disabled &&
-                !rootGroup.dragInitDone &&
-                this.options.drag &&
-                this.isValidDrag(e)) {
+              !rootGroup.dragInitDone &&
+              this.options.drag &&
+              this.isValidDrag(e)) {
                 rootGroup.dragInit(e, this)
             }
         },
         isValidDrag: function(e) {
             return e.which == 1 ||
-                e.type == "touchstart" && e.originalEvent.touches.length == 1
+              e.type == "touchstart" && e.originalEvent.touches.length == 1
         },
         searchValidTarget: function  (pointer, lastPointer) {
             var distances = sortByDistanceDesc(this.getItemDimensions(),
-                pointer,
-                lastPointer),
-                i = distances.length,
-                rootGroup = this.rootGroup,
-                validTarget = !rootGroup.options.isValidTarget ||
-                    rootGroup.options.isValidTarget(rootGroup.item, this)
+              pointer,
+              lastPointer),
+              i = distances.length,
+              rootGroup = this.rootGroup,
+              validTarget = !rootGroup.options.isValidTarget ||
+                rootGroup.options.isValidTarget(rootGroup.item, this)
 
             if(!i && validTarget){
                 rootGroup.movePlaceholder(this, this.target, "append")
@@ -2471,7 +2508,7 @@
             } else
                 while(i--){
                     var index = distances[i][0],
-                        distance = distances[i][1]
+                      distance = distances[i][1]
                     if(!distance && this.hasChildGroup(index)){
                         var found = this.getContainerGroup(index).searchValidTarget(pointer, lastPointer)
                         if(found)
@@ -2485,20 +2522,20 @@
         },
         movePlaceholder: function  (index, pointer) {
             var item = $(this.items[index]),
-                dim = this.itemDimensions[index],
-                method = "after",
-                width = item.outerWidth(),
-                height = item.outerHeight(),
-                offset = item.offset(),
-                sameResultBox = {
-                    left: offset.left,
-                    right: offset.left + width,
-                    top: offset.top,
-                    bottom: offset.top + height
-                }
+              dim = this.itemDimensions[index],
+              method = "after",
+              width = item.outerWidth(),
+              height = item.outerHeight(),
+              offset = item.offset(),
+              sameResultBox = {
+                  left: offset.left,
+                  right: offset.left + width,
+                  top: offset.top,
+                  bottom: offset.top + height
+              }
             if(this.options.vertical){
                 var yCenter = (dim[2] + dim[3]) / 2,
-                    inUpperHalf = pointer.top <= yCenter
+                  inUpperHalf = pointer.top <= yCenter
                 if(inUpperHalf){
                     method = "before"
                     sameResultBox.bottom -= height / 2
@@ -2506,7 +2543,7 @@
                     sameResultBox.top += height / 2
             } else {
                 var xCenter = (dim[0] + dim[1]) / 2,
-                    inLeftHalf = pointer.left <= xCenter
+                  inLeftHalf = pointer.left <= xCenter
                 if(inLeftHalf){
                     method = "before"
                     sameResultBox.right -= width / 2
@@ -2520,7 +2557,7 @@
         getItemDimensions: function  () {
             if(!this.itemDimensions){
                 this.items = this.$getChildren(this.el, "item").filter(
-                    ":not(." + this.group.options.placeholderClass + ", ." + this.group.options.draggedClass + ")"
+                  ":not(." + this.group.options.placeholderClass + ", ." + this.group.options.draggedClass + ")"
                 ).get()
                 setDimensions(this.items, this.itemDimensions = [], this.options.tolerance)
             }
@@ -2528,7 +2565,7 @@
         },
         getItemOffsetParent: function  () {
             var offsetParent,
-                el = this.el
+              el = this.el
             // Since el might be empty we have to check el itself and
             // can not do something like el.children().first().offsetParent()
             if(el.css("position") === "relative" || el.css("position") === "absolute"  || el.css("position") === "fixed")
@@ -2559,8 +2596,8 @@
         },
         $getChildren: function (parent, type) {
             var options = this.rootGroup.options,
-                path = options[type + "Path"],
-                selector = options[type + "Selector"]
+              path = options[type + "Path"],
+              selector = options[type + "Selector"]
 
             parent = $(parent)
             if(path)
@@ -2570,11 +2607,11 @@
         },
         _serialize: function (parent, isContainer) {
             var that = this,
-                childType = isContainer ? "item" : "container",
+              childType = isContainer ? "item" : "container",
 
-                children = this.$getChildren(parent, childType).not(this.options.exclude).map(function () {
-                    return that._serialize($(this), !isContainer)
-                }).get()
+              children = this.$getChildren(parent, childType).not(this.options.exclude).map(function () {
+                  return that._serialize($(this), !isContainer)
+              }).get()
 
             return this.rootGroup.options.serialize(parent, children, isContainer)
         },
@@ -2647,12 +2684,12 @@
 
         return this.map(function(){
             var $t = $(this),
-                object = $t.data(pluginName)
+              object = $t.data(pluginName)
 
             if(object && API[methodOrOptions])
                 return API[methodOrOptions].apply(object, args) || this
             else if(!object && (methodOrOptions === undefined ||
-                typeof methodOrOptions === "object"))
+              typeof methodOrOptions === "object"))
                 $t.data(pluginName, new Container($t, methodOrOptions))
 
             return this
