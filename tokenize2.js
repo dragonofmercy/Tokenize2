@@ -283,7 +283,7 @@
     Tokenize2.prototype.tokenAdd = function(value, text, force){
 
         value = this.escape(value);
-        text = text || value;
+        text = this.escape(text) || value;
         force = force || false;
         this.resetInput();
 
@@ -841,6 +841,12 @@
     Tokenize2.prototype.dropdownAddItem = function(item){
 
         if(this.isDropdownOpen()){
+
+            if(item.hasOwnProperty('text')){
+                item.text = this.escape(item.text);
+            }
+            item.value = this.escape(item.value);
+
             var $li = $('<li class="dropdown-item" />').html(this.dropdownItemFormat(item))
                 .on('mouseover', $.proxy(function(e){
                     e.preventDefault();
@@ -894,7 +900,6 @@
      * @returns {object|jQuery}
      */
     Tokenize2.prototype.dropdownItemFormat = function(item){
-
         if(item.hasOwnProperty('text')){
             var $display = '';
             if(this.options.searchHighlight){
@@ -1025,12 +1030,13 @@
      */
     Tokenize2.prototype.escape = function(string){
 
-        var $escaping = document.createElement('div');
-        $escaping.innerHTML = string;
-        string = ($escaping.textContent || $escaping.innerText || '');
-        return String(string).replace(/["]/g, function(){
-            return '\"';
-        });
+        if(string){
+            string = string.replaceAll(/["]/g, '&quot;');
+            string = string.replaceAll(/[<]/g, '&lt;');
+            string = string.replaceAll(/[>]/g, '&gt;');
+        }
+
+        return string;
 
     };
 
