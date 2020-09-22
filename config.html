@@ -8,12 +8,12 @@
     <title>Tokenize2 - Configuration</title>
 
     <link rel="shortcut icon" type="image/png" href="favicon.png" />
-    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 
     <link href="assets/tokenize2.min.css" rel="stylesheet" />
     <script src="assets/tokenize2.min.js"></script>
@@ -217,15 +217,18 @@
                     <h3>Usage with callable datas <small class="text-danger"><b>(Experimental)</b></small></h3>
                     <p>Callable option allow you to create your own search function. In the example below we will create a custom function to call Ajax and replace <code>search</code> request data with <code>term</code>.</p>
                     <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-source-demo-3').tokenize2({
-    dataSource: function(term, object){
+    dataSource: function (term, object) {
         $.ajax('remote.php', {
+            type: 'POST',
             data: { search: term, start: 0 },
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 var $items = [];
-                $.each(data, function(k, v){
+                object.trigger('tokenize:dropdown:clear');
+                $.each(data, function (k, v) {
                     $items.push(v);
                 });
+                object.trigger('tokenize:dropdown:show');
                 object.trigger('tokenize:dropdown:fill', [$items]);
             }
         });
