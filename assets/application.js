@@ -1,5 +1,5 @@
 // Version number for download last release
-var $VERSION = '1.3.2';
+var $VERSION = '1.3.3';
 
 $(function(){
     // Scrollspy

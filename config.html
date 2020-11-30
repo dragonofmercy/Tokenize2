@@ -340,7 +340,7 @@
 
                     <h2 id="options-search-from-start">searchFromStart</h2>
                     <p>This options allow you to specify if Tokenize2 will search from the begining of a string, but default this option is set to <code>true</code>.</p>
-                    <p>If the example below we have set the option to <code>false</code>.</p>
+                    <p>In the example below we have set the option to <code>false</code>.</p>
                     <div class="bs-example">
                         <select class="tokenize-start-demo" multiple></select>
                         <script>$('.tokenize-start-demo').tokenize2({dataSource: 'https://dragonofmercy.com/demo/tokenize2/remote.php?start=0', searchFromStart: false})</script>
@@ -351,13 +351,31 @@
 
                     <h2 id="options-search-highlight">searchHighlight</h2>
                     <p>The searchHighlight options allow you to choose if you want your search highlighted in the result dropdown. By default this option is set to <code>true</code>.</p>
-                    <p>If the example below we have set the option to <code>false</code>.</p>
+                    <p>In the example below we have set the option to <code>false</code>.</p>
                     <div class="bs-example">
                         <select class="tokenize-highlight-demo" multiple></select>
                         <script>$('.tokenize-highlight-demo').tokenize2({dataSource: 'https://dragonofmercy.com/demo/tokenize2/remote.php?start=0', searchHighlight: false})</script>
                     </div>
                     <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-highlight-demo').tokenize2({
     searchHighlight: false
+});</code></pre></figure>
+
+                    <h2 id="options-select-first">dropdownSelectFirstItem</h2>
+                    <p>The dropdownSelectFirstItem option allow you to choose if the first item is automatically selected on search, usefull to be <code>false</code> when tokensAllowCustom is <code>true</code>. By default this option is set to <code>true</code>.</p>
+                    <p>In the example below we have set the option to <code>false</code>.</p>
+                    <div class="bs-example">
+                        <select class="tokenize-select-first-demo" multiple>
+                            <option value="Africa">Africa</option>
+                            <option value="Americas">Americas</option>
+                            <option value="Asia">Asia</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Oceania">Oceania</option>
+                        </select>
+                        <script>$('.tokenize-select-first-demo').tokenize2({ tokensAllowCustom: true, dropdownSelectFirstItem: false})</script>
+                    </div>
+                    <figure class="highlight"><pre class="prettyprint"><code>$('.tokenize-select-first-demo').tokenize2({
+    tokensAllowCustom: true,
+    dropdownSelectFirstItem: false
 });</code></pre></figure>
                 </div>
 
@@ -380,6 +398,7 @@
                                 <li><a href="#options-search-min-length">searchMinLength</a></li>
                                 <li><a href="#options-search-from-start">searchFromStart</a></li>
                                 <li><a href="#options-search-highlight">searchHighlight</a></li>
+                                <li><a href="#options-select-first">dropdownSelectFirstItem</a></li>
                             </ul>
 
                         </li>
