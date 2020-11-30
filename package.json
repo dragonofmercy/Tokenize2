@@ -1,6 +1,6 @@
 {
     "name": "tokenize2",
-    "version": "1.3.2",
+    "version": "1.3.3",
     "main": "/dist/tokenize2.min.js",
     "description": "Plugin which allows your users to select multiple items from a predefined list or ajax, using autocompletion as they type to find each item.",
     "homepage": "http://dragonofmercy.github.io/Tokenize2",
