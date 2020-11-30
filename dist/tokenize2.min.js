@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v1.3.1 (https://github.com/dragonofmercy/Tokenize2)
+ * Tokenize2 v1.3.3 (https://github.com/dragonofmercy/Tokenize2)
  * Copyright 2016-2017 DragonOfMercy.
  * Licensed under the new BSD license
  */
