@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v1.3.3 (https://github.com/dragonofmercy/Tokenize2)
+ * Tokenize2 v1.3.4 (https://github.com/dragonofmercy/Tokenize2)
  * Copyright 2016-2017 DragonOfMercy.
  * Licensed under the new BSD license
  */
@@ -66,7 +66,7 @@
         MAJ: 16
     };
 
-    Tokenize2.VERSION = '1.3.3';
+    Tokenize2.VERSION = '1.3.4';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
@@ -1029,6 +1029,8 @@
      * @returns {string}
      */
     Tokenize2.prototype.escape = function(string){
+
+        string = String(string);
 
         if(string){
             string = string.replaceAll(/["]/g, '&quot;');
