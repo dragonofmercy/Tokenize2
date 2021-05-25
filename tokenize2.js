@@ -1033,13 +1033,25 @@
         string = String(string);
 
         if(string){
-            string = string.replaceAll(/["]/g, '&quot;');
-            string = string.replaceAll(/[<]/g, '&lt;');
-            string = string.replaceAll(/[>]/g, '&gt;');
+            string = this.replaceAll(string, /["]/, '&quot;');
+            string = this.replaceAll(string, /[<]/, '&lt;');
+            string = this.replaceAll(string, /[>]/, '&gt;');
         }
 
         return string;
 
+    };
+
+    /**
+     * Replace all function for strings
+     *
+     * @param {string} needle
+     * @param {string|RegExp} search
+     * @param {string} replacement
+     * @returns {string}
+     */
+    Tokenize2.prototype.replaceAll = function(needle, search, replacement) {
+        return needle.replace(new RegExp(search, 'g'), replacement);
     };
 
     /**
