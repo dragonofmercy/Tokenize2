@@ -63,7 +63,8 @@
         ARROW_UP: 38,
         ARROW_DOWN: 40,
         CTRL: 17,
-        MAJ: 16
+        MAJ: 16,
+        A: 65
     };
 
     Tokenize2.VERSION = '1.3.4';
@@ -353,6 +354,7 @@
         $('li.token[data-value="' + v + '"]', this.tokensContainer).remove();
 
         this.trigger('tokenize:tokens:reorder');
+        this.input.focus();
         return this;
 
     };
@@ -451,7 +453,9 @@
                     if(this.input.val().length < 1){
                         e.preventDefault();
                         if($('li.token.pending-delete', this.tokensContainer).length > 0){
-                            this.trigger('tokenize:tokens:remove', [$('li.token.pending-delete', this.tokensContainer).first().attr('data-value')]);
+                            $('li.token.pending-delete', this.tokensContainer).each($.proxy(function(v, t){
+                                this.trigger('tokenize:tokens:remove', $(t).attr('data-value'));
+                            }, this));
                         } else {
                             var $token = $('li.token:last', this.tokensContainer);
                             if($token.length > 0){
@@ -494,7 +498,15 @@
                     break;
 
                 default:
-                    this.resetPending();
+                    if(e.keyCode === KEYS.A && this.control && this.input.val().length < 1){
+                        e.preventDefault();
+                        $('li.token', this.tokensContainer).each($.proxy(function(v, t){
+                            this.trigger('tokenize:tokens:markForDelete', [$(t).attr('data-value')]);
+                            $(t).addClass('pending-delete');
+                        }, this));
+                    } else {
+                        this.resetPending();
+                    }
                     break;
 
             }
@@ -966,7 +978,7 @@
      */
     Tokenize2.prototype.resetPending = function(){
 
-        var $token = $('li.pending-delete:last', this.tokensContainer);
+        var $token = $('li.pending-delete', this.tokensContainer);
 
         if($token.length > 0){
             this.trigger('tokenize:tokens:cancelDelete', [$token.attr('data-value')]);
