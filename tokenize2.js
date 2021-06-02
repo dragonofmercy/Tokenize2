@@ -1,5 +1,5 @@
 /*!
- * Tokenize2 v1.3.5 (https://github.com/dragonofmercy/Tokenize2)
+ * Tokenize2 v1.3.6 (https://github.com/dragonofmercy/Tokenize2)
  * Copyright 2016-2017 DragonOfMercy.
  * Licensed under the new BSD license
  */
@@ -67,7 +67,7 @@
         A: 65
     };
 
-    Tokenize2.VERSION = '1.3.5';
+    Tokenize2.VERSION = '1.3.6';
     Tokenize2.DEBOUNCE = null;
     Tokenize2.DEFAULTS = {
         tokensMaxItems: 0,
@@ -282,8 +282,7 @@
      * @returns {Tokenize2}
      */
     Tokenize2.prototype.tokenAdd = function(value, text, force){
-
-        console.log(value, text);
+        
         value = this.escape(value);
         text = text === undefined ? value : this.escape(text);
         force = force || false;
