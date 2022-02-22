@@ -245,7 +245,7 @@
         if(this.options.sortable){
             var previous, current, data = this.tokensContainer.tokenize2sortable('serialize').get(0);
             $.each(data, $.proxy(function(k, v){
-                current = $('option[value="' + v.value + '"]', this.element);
+                current = $('option[value="' + this.escapeQuery(v.value) + '"]', this.element);
                 if(previous === undefined){
                     current.prependTo(this.element);
                 } else {
@@ -282,7 +282,7 @@
      * @returns {Tokenize2}
      */
     Tokenize2.prototype.tokenAdd = function(value, text, force){
-        
+
         value = this.escape(value);
         text = text === undefined ? value : this.escape(text);
         force = force || false;
@@ -301,13 +301,13 @@
         }
 
         // Check duplicate token
-        if($('li.token[data-value="' + value + '"]', this.tokensContainer).length > 0){
+        if($('li.token[data-value="' + this.escapeQuery(value) + '"]', this.tokensContainer).length > 0){
             this.trigger('tokenize:tokens:error:duplicate', [value, text]);
             return this;
         }
 
-        if($('option[value="' + value + '"]', this.element).length) {
-            $('option[value="' + value + '"]', this.element).attr('selected', 'selected').prop('selected', true);
+        if($('option[value="' + this.escapeQuery(value) + '"]', this.element).length) {
+            $('option[value="' + this.escapeQuery(value) + '"]', this.element).attr('selected', 'selected').prop('selected', true);
         } else if(force){
             this.element.append($('<option selected />').val(value).html(text));
         } else if(this.options.tokensAllowCustom){
@@ -343,7 +343,7 @@
      */
     Tokenize2.prototype.tokenRemove = function(v){
 
-        var $item = $('option[value="' + v + '"]', this.element);
+        var $item = $('option[value="' + this.escapeQuery(v) + '"]', this.element);
 
         if($item.attr('data-type') === 'custom'){
             $item.remove();
@@ -351,7 +351,7 @@
             $item.removeAttr('selected').prop('selected', false);
         }
 
-        $('li.token[data-value="' + v + '"]', this.tokensContainer).remove();
+        $('li.token[data-value="' + this.escapeQuery(v) + '"]', this.tokensContainer).remove();
 
         this.trigger('tokenize:tokens:reorder');
         this.input.focus();
@@ -872,7 +872,7 @@
                     e.target = this.fixTarget(e.target);
                     this.trigger('tokenize:tokens:add', [$(e.target).attr('data-value'), $(e.target).attr('data-text'), true]);
                 }, this));
-            if($('li.token[data-value="' + $li.find('a').attr('data-value') + '"]', this.tokensContainer).length < 1){
+            if($('li.token[data-value="' + this.escapeQuery($li.find('a').attr('data-value')) + '"]', this.tokensContainer).length < 1){
                 this.dropdown.find('.dropdown-menu').append($li);
                 this.trigger('tokenize:dropdown:itemAdded', [item]);
             }
@@ -1053,6 +1053,23 @@
         return string;
 
     };
+
+    /**
+     * Escape string for query
+     *
+     * @param {string} string
+     * @returns {string}
+     */
+    Tokenize2.prototype.escapeQuery = function(string){
+
+        string = String(string);
+
+        if(string){
+            string = this.replaceAll(string, /\\/, '\\\\');
+        }
+
+        return string
+    }
 
     /**
      * Replace all function for strings
