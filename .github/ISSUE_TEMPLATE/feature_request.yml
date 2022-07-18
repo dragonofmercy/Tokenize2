@@ -5,26 +5,25 @@ labels:
 body:
 - type: textarea
   attributes: 
-    label: Description of the new feature / enhancement
-    placeholder: |
-      What is the expected behavior of the proposed feature?
+    label: Is your feature request related to a problem?
+    description: Please describe. A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
   validations:
     required: true
 - type: textarea
   attributes: 
-    label: Scenario when this would be used? 
-    placeholder: |
-      What is the scenario this would be used?
+    label: Describe the solution you'd like
+    description: What is the scenario this would be used?
   validations:
     required: true
 - type: textarea
   attributes: 
-    label: Supporting information
-    placeholder: |
-      Having additional evidence, data, tweets, blog posts, research, ... anything is extremely helpful. This information provides context to the scenario that may otherwise be lost.
+    label: Describe alternatives you've considered
+    description: A clear and concise description of any alternative solutions or features you've considered.
   validations:
     required: false
-- type: markdown
-  attributes:
-    value: |
-      Please limit one request per issue.
+- type: textarea
+  attributes: 
+    label: Additional context
+    description: Add any other context or screenshots about the feature request here.
+  validations:
+    required: false
