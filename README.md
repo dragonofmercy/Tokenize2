@@ -1,3 +1,6 @@
+## Deprecation warning!
+This repository has been deprecated in favour of [TomSelect](https://tom-select.js.org).
+
 # Tokenize2
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://ko-fi.com/dragonofmercy)
